@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter } from 'react-router-dom';
 import {
   Landing,
   HomeLayout,
@@ -8,8 +8,8 @@ import {
   DashBoard,
   Activation,
   Profile,
-} from "./pages";
-import { useSelector } from "react-redux";
+} from './pages';
+import { useSelector } from 'react-redux';
 
 function ProtectedRouter({ children, redirectTo, authPageRedirection }) {
   // const { isLogin } = useSelector((state) => state.user);
@@ -42,7 +42,7 @@ function ProtectedRouter({ children, redirectTo, authPageRedirection }) {
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <HomeLayout />,
     errorElement: <Error />,
     children: [
@@ -52,16 +52,16 @@ export const router = createBrowserRouter([
         errorElement: <Error />,
       },
       {
-        path: "/home",
+        path: '/home',
         element: (
-          <ProtectedRouter redirectTo="/activation" authPageRedirection="home">
-            <DashBoard />
-          </ProtectedRouter>
+          // <ProtectedRouter redirectTo="/activation" authPageRedirection="home">
+          <DashBoard />
+          // </ProtectedRouter>
         ),
         errorElement: <Error />,
       },
       {
-        path: "/profile",
+        path: '/profile',
         element: (
           <ProtectedRouter
             redirectTo="/activation"
@@ -73,7 +73,7 @@ export const router = createBrowserRouter([
         errorElement: <Error />,
       },
       {
-        path: "/activation",
+        path: '/activation',
         element: (
           <ProtectedRouter redirectTo="/home" authPageRedirection="activation">
             <Activation />
@@ -84,17 +84,17 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "/login",
+    path: '/login',
     element: <Login />,
     errorElement: <Error />,
   },
   {
-    path: "/register",
+    path: '/register',
     element: (
-      <ProtectedRouter redirectTo="/activation" authPageRedirection="register">
-        <Register />
-        //{" "}
-      </ProtectedRouter>
+      // <ProtectedRouter redirectTo="/activation" authPageRedirection="register">
+      <Register />
+      //{" "}
+      // </ProtectedRouter>
     ),
     errorElement: <Error />,
   },
