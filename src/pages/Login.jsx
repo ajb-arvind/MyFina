@@ -1,17 +1,26 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import * as React from "react";
+import {
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Link,
+  Grid,
+  Box,
+  Typography,
+  Container,
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { doc, getDoc } from "firebase/firestore";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../firebase";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../redux/features/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -21,27 +30,66 @@ function Copyright(props) {
       align="center"
       {...props}
     >
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
+      {"Copyright © "}
+      <Link
+        color="inherit"
+        href="https://mui.com/"
+        style={{ textDecoration: "none" }}
+      >
+        MyFinance
+      </Link>{" "}
       {new Date().getFullYear()}
-      {'.'}
+      {"."}
     </Typography>
   );
 }
 
 const Login = () => {
-  const handleSubmit = (event) => {
+  const dispatch = useDispatch();
+  let navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+    const email = data.get("email");
+    const password = data.get("password");
 
-  // TODO remove, this demo shouldn't need to reset the theme.
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      //if sign in successful save following details in store-userSlice
+      const { emailVerified, uid } = userCredential.user;
+
+      const docRef = doc(db, "users", uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        let user = docSnap.data();
+        dispatch(
+          loginUser({
+            user,
+            isLogin: true,
+            emailVerified: true,
+          })
+        );
+      }
+
+      // redirect if email is not verified
+      if (!emailVerified) {
+        navigate("/register");
+      }
+
+      // redirect to home page
+      navigate("/home");
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  };
 
   const defaultTheme = createTheme();
 
@@ -52,12 +100,12 @@ const Login = () => {
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -97,25 +145,33 @@ const Login = () => {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 6, mb: 2 }}
             >
               Sign In
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link
+                  href="#"
+                  variant="body2"
+                  style={{ textDecoration: "none" }}
+                >
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                <Link
+                  href="/register"
+                  variant="body2"
+                  style={{ textDecoration: "none" }}
+                >
+                  {"Don't have an account?"}
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
+        <Copyright sx={{ mt: 20 }} />
       </Container>
     </ThemeProvider>
   );
