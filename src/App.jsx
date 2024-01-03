@@ -36,9 +36,9 @@ const router = createBrowserRouter([
       {
         path: '/home',
         element: (
-          <ProtectedRouter redirectTo="/activation" authPageRedirection="home">
-            <DashBoard />
-          </ProtectedRouter>
+          // <ProtectedRouter redirectTo="/activation" authPageRedirection="home">
+          <DashBoard />
+          // </ProtectedRouter>
         ),
         errorElement: <Error />,
         // action: transactionAction,
