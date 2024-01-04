@@ -1,23 +1,12 @@
-import * as React from 'react';
+import * as React from "react";
 import {
-  Avatar,
   Button,
-  CssBaseline,
   TextField,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Grid,
   Box,
-  Typography,
-  Container,
   ToggleButton,
   ToggleButtonGroup,
   Autocomplete,
-} from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-
-import Title from './Title';
+} from "@mui/material";
 
 function preventDefault(event) {
   event.preventDefault();
@@ -28,14 +17,14 @@ const handleSubmit = async (event) => {
 };
 
 const top100Films = [
-  { label: 'The Shawshank Redemption', year: 1994 },
-  { label: 'The Godfather', year: 1972 },
-  { label: 'The Godfather: Part II', year: 1974 },
-  { label: 'The Dark Knight', year: 2008 },
+  { label: "The Shawshank Redemption", year: 1994 },
+  { label: "The Godfather", year: 1972 },
+  { label: "The Godfather: Part II", year: 1974 },
+  { label: "The Dark Knight", year: 2008 },
 ];
 
 export default function Deposits() {
-  const [type, setType] = React.useState('income');
+  const [type, setType] = React.useState("income");
 
   const handleAlignment = (event, newType) => {
     setType(newType);
@@ -43,13 +32,11 @@ export default function Deposits() {
 
   return (
     <React.Fragment>
-      <Title>Add Transactions</Title>
       <Box
         sx={{
-          marginTop: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <Box component="form" onSubmit={handleSubmit} noValidate>
@@ -115,6 +102,7 @@ export default function Deposits() {
             name="amount"
             autoFocus
             type="number"
+            sx={{ my: 1 }}
           />
 
           <TextField
@@ -125,15 +113,11 @@ export default function Deposits() {
             name="amount"
             autoFocus
             type="text"
+            sx={{ my: 1 }}
           />
 
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Add
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 1 }}>
+            Add Transaction
           </Button>
         </Box>
       </Box>
