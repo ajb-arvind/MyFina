@@ -1,40 +1,9 @@
-import * as React from 'react';
-import {
-  styled,
-  createTheme,
-  ThemeProvider,
-  useTheme,
-} from '@mui/material/styles';
-import {
-  CssBaseline,
-  Box,
-  Toolbar,
-  Typography,
-  Container,
-  Grid,
-  Paper,
-  Link,
-} from '@mui/material';
+import * as React from "react";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { CssBaseline, Box, Container, Grid, Paper } from "@mui/material";
 
-import { IncomeExpenseChart, Deposits, Orders } from '../components';
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        MyFinance
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import { IncomeExpenseChart, Deposits, Orders } from "../components";
+import { Copyright } from "../components/Copyright";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -43,17 +12,17 @@ const DashBoard = () => {
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: "flex" }}>
         <Box
           component="main"
           sx={{
             backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
+              theme.palette.mode === "light"
                 ? theme.palette.grey[100]
                 : theme.palette.grey[900],
             flexGrow: 1,
-            height: '100vh',
-            overflow: 'auto',
+            height: "100vh",
+            overflow: "auto",
           }}
         >
           <Container maxWidth="xl" sx={{ mt: 2, ml: 1 }}>
@@ -61,7 +30,7 @@ const DashBoard = () => {
               container
               columnSpacing={{ md: 2 }}
               rowSpacing={{ xs: 2, md: 0 }}
-              direction={{ xs: 'column-reverse', md: 'row' }}
+              direction={{ xs: "column-reverse", md: "row" }}
             >
               <Grid
                 container
@@ -75,8 +44,8 @@ const DashBoard = () => {
                   <Paper
                     sx={{
                       p: 2,
-                      display: 'flex',
-                      flexDirection: 'column',
+                      display: "flex",
+                      flexDirection: "column",
                       height: 240,
                     }}
                   >
@@ -86,7 +55,7 @@ const DashBoard = () => {
                 {/* Recent Orders */}
                 <Grid item>
                   <Paper
-                    sx={{ p: 2, display: 'flex', flexDirection: 'column' }}
+                    sx={{ p: 2, display: "flex", flexDirection: "column" }}
                   >
                     <Orders />
                   </Paper>
@@ -97,17 +66,16 @@ const DashBoard = () => {
                 <Paper
                   sx={{
                     p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: '100%',
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100%",
                   }}
                 >
                   <Deposits />
                 </Paper>
               </Grid>
             </Grid>
-
-            <Copyright sx={{ pt: 4 }} />
+            <Copyright sx={{ pt: 1 }} />
           </Container>
         </Box>
       </Box>

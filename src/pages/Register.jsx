@@ -23,27 +23,7 @@ import { loginUser } from "../redux/features/user/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { InitialUserAccounts, InitialUserCategories } from "../misc/Utils";
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link
-        color="inherit"
-        href="https://mui.com/"
-        style={{ textDecoration: "none" }}
-      >
-        MyFinance
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import { Copyright } from "../components/Copyright";
 
 const defaultTheme = createTheme();
 
