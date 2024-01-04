@@ -5,3 +5,5 @@ export { default as InputTransaction } from './InputTransaction';
 export { default as EmailActivation } from './EmailActivation';
 export { default as CategoryListEdit } from './CategoryListEdit';
 export { default as CategoryList } from './CategoryList';
+export { default as Deposits } from './Deposits';
+export { default as Orders } from './Orders';
