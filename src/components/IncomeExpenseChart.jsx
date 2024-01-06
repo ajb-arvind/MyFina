@@ -32,7 +32,7 @@ const IncomeExpenseChart = () => {
 
   return (
     <React.Fragment>
-      <Title>Today</Title>
+      <Title>Income vs Expense</Title>
       <ResponsiveContainer>
         <LineChart
           data={data}

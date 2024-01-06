@@ -63,12 +63,12 @@ export const router = createBrowserRouter([
       {
         path: '/profile',
         element: (
-          <ProtectedRouter
-            redirectTo="/activation"
-            authPageRedirection="profile"
-          >
-            <Profile />
-          </ProtectedRouter>
+          // <ProtectedRouter
+          //   redirectTo="/activation"
+          //   authPageRedirection="profile"
+          // >
+          <Profile />
+          // </ProtectedRouter>
         ),
         errorElement: <Error />,
       },
