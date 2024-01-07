@@ -20,6 +20,10 @@ import {
 import Title from '../components/Title';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import TabPanelUserDetails from '../components/TabPanelUserDetails';
+import CategoryList from '../components/CategoryList';
+import { useSelector } from 'react-redux';
+import CategoryListEdit from '../components/CategoryListEdit';
 
 function TabPanel({ children, value, index, ...other }) {
   return (
@@ -54,6 +58,9 @@ function a11yProps(index) {
 
 const defaultTheme = createTheme();
 const Profile = () => {
+  const { user } = useSelector((state) => state.user);
+  const [isEdit, setIsEdit] = useState(false);
+
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -122,45 +129,31 @@ const Profile = () => {
                   />
                 </Tabs>
                 <TabPanel value={value} index={0}>
-                  <Card sx={{ width: 240 }}>
-                    <CardHeader title="Profile Photo"></CardHeader>
-                    <Divider />
-                    <CardContent>
-                      <Grid
-                        container
-                        rowSpacing={2}
-                        alignItems="center"
-                        sx={{ mt: 2 }}
-                        direction="column"
-                      >
-                        <Grid item>
-                          <Avatar
-                            alt="Remy Sharp"
-                            src="/static/images/avatar/1.jpg"
-                            sx={{ width: 80, height: 80 }}
-                          />
-                        </Grid>
-                        <Grid item>
-                          <Typography
-                            component="p"
-                            variant="caption"
-                            gutterBottom
-                            sx={{ mt: 2 }}
-                          >
-                            Upload/Change Your Profile Image
-                          </Typography>
-                        </Grid>
-                        <Grid item>
-                          <Button variant="contained">Upload Profile</Button>
-                        </Grid>
-                      </Grid>
-
-                      <CssBaseline />
-                    </CardContent>
-                  </Card>
+                  <TabPanelUserDetails />
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                  Item Two
+                  <Box sx={[{ my: 4 }, isEdit && { display: 'none' }]}>
+                    <Typography variant="paragraph">Edit Categories</Typography>{' '}
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => setIsEdit(!isEdit)}
+                    >
+                      Edit
+                    </Button>
+                  </Box>
+                  {!isEdit ? (
+                    <CategoryList
+                      categoriesData={user.categories}
+                      accountsData={user.accounts}
+                    />
+                  ) : (
+                    <CategoryListEdit
+                      categoriesData={user.categories}
+                      accountsData={user.accounts}
+                      setIsEdit={setIsEdit}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel value={value} index={2}>
                   Item Three

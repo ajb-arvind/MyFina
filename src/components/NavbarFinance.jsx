@@ -13,11 +13,27 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
+import { Link, useNavigate } from 'react-router-dom';
+import { logoutUser } from '../redux/features/user/userSlice';
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebase';
+import { useDispatch, useSelector } from 'react-redux';
+
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = [
+  {
+    label: 'Profile',
+    url: '/profile',
+  },
+  {
+    label: 'Log Out',
+  },
+];
 const NavbarFinance = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -32,6 +48,12 @@ const NavbarFinance = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    dispatch(logoutUser());
+    navigate('/login');
   };
 
   return (
@@ -146,11 +168,20 @@ const NavbarFinance = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              {settings.map((setting, index) => {
+                const isLastItem = index === settings.length - 1;
+                return (
+                  <Link key={setting.label} to={setting.url}>
+                    <MenuItem
+                      onClick={isLastItem ? handleLogout : handleCloseUserMenu}
+                    >
+                      <Typography textAlign="center">
+                        {setting.label}
+                      </Typography>
+                    </MenuItem>
+                  </Link>
+                );
+              })}
             </Menu>
           </Box>
         </Toolbar>
