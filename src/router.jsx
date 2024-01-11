@@ -11,6 +11,9 @@ import {
 } from './pages';
 import { useSelector } from 'react-redux';
 
+//action
+import { action as transactionAction } from './pages/DashBoard';
+
 function ProtectedRouter({ children, redirectTo, authPageRedirection }) {
   // const { isLogin } = useSelector((state) => state.user);
   // const user = useSelector((state) => state.user.user);
@@ -59,6 +62,7 @@ export const router = createBrowserRouter([
           // </ProtectedRouter>
         ),
         errorElement: <Error />,
+        action: transactionAction,
       },
       {
         path: '/profile',

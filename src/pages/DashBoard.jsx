@@ -2,13 +2,107 @@ import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Box, Container, Grid, Paper } from '@mui/material';
 
-import { IncomeExpenseChart, Deposits, Orders } from '../components';
-import { Copyright } from '../components/Copyright';
+// import {
+//   IncomeExpenseChart,
+//   NewTransaction,
+//   TransactionHistory,
+//   Copyright,
+// } from '../components';
+import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from 'firebase/firestore';
+import { db } from '../firebase';
+import {
+  IncomeExpenseChart,
+  NewTransaction,
+  TransactionHistory,
+  Copyright,
+} from '../components';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
+export const action = async ({ request }) => {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData);
+
+  console.log(data);
+  return null;
+  // try {
+  //   const transactionId = uuidv4();
+  //   await setDoc(doc(db, 'transactions', transactionId), {
+  //     account: data.account,
+  //     amount: Number(data.amount),
+  //     category: data.category,
+  //     date: data.date,
+  //     note: encrypt(data.note),
+  //     subCategory: data.subCategory,
+  //     type: data.type,
+  //     userId: store.getState()?.user?.user?.userId,
+  //     createdAt: Date.now(),
+  //     transactionId,
+  //   });
+
+  //   alert('Success!');
+
+  //   return null;
+  // } catch (error) {
+  //   alert('Error!', error.message);
+  //   return null;
+  // }
+};
+
 const DashBoard = () => {
+  const userId = useSelector((state) => state.user.user.userId);
+  const [transactionList, setTransactionList] = useState([]);
+  const [chartData, setChartData] = useState([]);
+  const getTransactionList = async () => {
+    const q = query(
+      collection(db, 'transactions'),
+      where('userId', '==', userId)
+    );
+
+    const querySnapshot = await getDocs(q);
+    let list = [];
+    let chartList = [];
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      list.push(data);
+      const month = data.date.split('-')[1];
+      const index = chartList.findIndex((item) => item.name == month);
+      if (index === -1) {
+        chartList.push({
+          name: month,
+          income: data.type == 'income' ? data.amount : 0,
+          expense: data.type == 'expense' ? data.amount : 0,
+        });
+      } else {
+        let obj = {
+          name: month,
+          income:
+            chartList[index].income + (data.type == 'income' ? data.amount : 0),
+          expense:
+            chartList[index].expense +
+            (data.type == 'expense' ? data.amount : 0),
+        };
+        chartList[index] = obj;
+      }
+    });
+    setTransactionList(list);
+    setChartData(chartList);
+  };
+
+  useEffect(() => {
+    getTransactionList();
+  }, []);
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
@@ -34,6 +128,7 @@ const DashBoard = () => {
               direction={{ xs: 'column-reverse', md: 'row' }}
             >
               <Grid
+                item
                 container
                 rowSpacing={{ xs: 2 }}
                 xs={12}
@@ -50,15 +145,15 @@ const DashBoard = () => {
                       height: 240,
                     }}
                   >
-                    <IncomeExpenseChart />
+                    <IncomeExpenseChart chartData={chartData} />
                   </Paper>
                 </Grid>
-                {/* Recent Orders */}
+                {/* Recent TransactionHistory */}
                 <Grid item>
                   <Paper
                     sx={{ p: 2, display: 'flex', flexDirection: 'column' }}
                   >
-                    <Orders />
+                    <TransactionHistory transactionList={transactionList} />
                   </Paper>
                 </Grid>
               </Grid>
@@ -72,7 +167,7 @@ const DashBoard = () => {
                     height: '100%',
                   }}
                 >
-                  <Deposits />
+                  <NewTransaction />
                 </Paper>
               </Grid>
             </Grid>

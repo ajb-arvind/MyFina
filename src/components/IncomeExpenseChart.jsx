@@ -27,8 +27,9 @@ const data = [
   createData('24:00', undefined),
 ];
 
-const IncomeExpenseChart = () => {
+const IncomeExpenseChart = ({ chartData }) => {
   const theme = useTheme();
+  let data = chartData.sort((a, b) => Number(a.name) - Number(b.name));
 
   return (
     <React.Fragment>
@@ -36,15 +37,10 @@ const IncomeExpenseChart = () => {
       <ResponsiveContainer>
         <LineChart
           data={data}
-          margin={{
-            top: 16,
-            right: 16,
-            bottom: 0,
-            left: 24,
-          }}
+          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         >
           <XAxis
-            dataKey="time"
+            dataKey="name"
             stroke={theme.palette.text.secondary}
             style={theme.typography.body2}
           />
@@ -61,15 +57,20 @@ const IncomeExpenseChart = () => {
                 ...theme.typography.body1,
               }}
             >
-              Sales ($)
+              I vs E
             </Label>
           </YAxis>
           <Line
             isAnimationActive={false}
             type="monotone"
-            dataKey="amount"
+            dataKey="income"
             stroke={theme.palette.primary.main}
-            dot={false}
+          />
+          <Line
+            isAnimationActive={false}
+            type="monotone"
+            dataKey="expense"
+            stroke="#82ca9d"
           />
         </LineChart>
       </ResponsiveContainer>

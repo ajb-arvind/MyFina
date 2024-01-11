@@ -1,15 +1,8 @@
 import {
-  Avatar,
   Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
   Container,
   CssBaseline,
   Divider,
-  Grid,
   Paper,
   Tab,
   Tabs,
@@ -21,9 +14,8 @@ import Title from '../components/Title';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import TabPanelUserDetails from '../components/TabPanelUserDetails';
-import CategoryList from '../components/CategoryList';
 import { useSelector } from 'react-redux';
-import CategoryListEdit from '../components/CategoryListEdit';
+import DisplayCategories from '../components/DisplayCategories';
 
 function TabPanel({ children, value, index, ...other }) {
   return (
@@ -132,28 +124,10 @@ const Profile = () => {
                   <TabPanelUserDetails />
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                  <Box sx={[{ my: 4 }, isEdit && { display: 'none' }]}>
-                    <Typography variant="paragraph">Edit Categories</Typography>{' '}
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => setIsEdit(!isEdit)}
-                    >
-                      Edit
-                    </Button>
-                  </Box>
-                  {!isEdit ? (
-                    <CategoryList
-                      categoriesData={user.categories}
-                      accountsData={user.accounts}
-                    />
-                  ) : (
-                    <CategoryListEdit
-                      categoriesData={user.categories}
-                      accountsData={user.accounts}
-                      setIsEdit={setIsEdit}
-                    />
-                  )}
+                  <DisplayCategories
+                    categoriesData={user.categories}
+                    accountsData={user.accounts}
+                  />
                 </TabPanel>
                 <TabPanel value={value} index={2}>
                   Item Three

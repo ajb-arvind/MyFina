@@ -19,7 +19,9 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useDispatch, useSelector } from 'react-redux';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+import AppLogo from '../assets/MyFina.png';
+
+const pages = [{ label: 'DashBoard', url: '/home' }];
 const settings = [
   {
     label: 'Profile',
@@ -60,24 +62,16 @@ const NavbarFinance = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+          <Box
+            component="img"
+            src={AppLogo}
             sx={{
-              mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+
+              width: 150,
+              height: 50,
             }}
-          >
-            LOGO
-          </Typography>
+          />
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -109,8 +103,14 @@ const NavbarFinance = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem
+                  key={page.label}
+                  onClick={() => {
+                    handleCloseNavMenu();
+                    navigate(page.url);
+                  }}
+                >
+                  <Typography textAlign="center">{page.label}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -120,7 +120,7 @@ const NavbarFinance = () => {
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/home"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -137,11 +137,11 @@ const NavbarFinance = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
+                key={page.label}
+                onClick={() => navigate(page.url)}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                {page.label}
               </Button>
             ))}
           </Box>

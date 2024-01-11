@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   Avatar,
   Button,
@@ -11,17 +11,17 @@ import {
   Box,
   Typography,
   Container,
-} from "@mui/material";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+} from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { doc, getDoc } from "firebase/firestore";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../firebase";
-import { useDispatch } from "react-redux";
-import { loginUser } from "../redux/features/user/userSlice";
-import { useNavigate } from "react-router-dom";
-import { Copyright } from "../components/Copyright";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { doc, getDoc } from 'firebase/firestore';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from '../firebase';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../redux/features/user/userSlice';
+import { useNavigate } from 'react-router-dom';
+import { Copyright } from '../components';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -30,8 +30,8 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const email = data.get("email");
-    const password = data.get("password");
+    const email = data.get('email');
+    const password = data.get('password');
 
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -43,7 +43,7 @@ const Login = () => {
       //if sign in successful save following details in store-userSlice
       const { emailVerified, uid } = userCredential.user;
 
-      const docRef = doc(db, "users", uid);
+      const docRef = doc(db, 'users', uid);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
@@ -59,11 +59,11 @@ const Login = () => {
 
       // redirect if email is not verified
       if (!emailVerified) {
-        navigate("/register");
+        navigate('/register');
       }
 
       // redirect to home page
-      navigate("/home");
+      navigate('/home');
     } catch (error) {
       console.log(error);
       return;
@@ -79,12 +79,12 @@ const Login = () => {
         <Box
           sx={{
             marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -133,7 +133,7 @@ const Login = () => {
                 <Link
                   href="#"
                   variant="body2"
-                  style={{ textDecoration: "none" }}
+                  style={{ textDecoration: 'none' }}
                 >
                   Forgot password?
                 </Link>
@@ -142,7 +142,7 @@ const Login = () => {
                 <Link
                   href="/register"
                   variant="body2"
-                  style={{ textDecoration: "none" }}
+                  style={{ textDecoration: 'none' }}
                 >
                   {"Don't have an account?"}
                 </Link>

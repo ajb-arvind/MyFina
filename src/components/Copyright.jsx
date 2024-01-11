@@ -1,7 +1,7 @@
-import { Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 
-export function Copyright(props) {
+export default function Copyright(props) {
   return (
     <Typography
       variant="subtitle2"
@@ -9,14 +9,14 @@ export function Copyright(props) {
       align="center"
       {...props}
     >
-      {"© "}
+      {'© '}
       <Link
         color="inherit"
         href="https://mui.com/"
-        style={{ textDecoration: "none" }}
+        style={{ textDecoration: 'none' }}
       >
         MyFinance
-      </Link>{" "}
+      </Link>{' '}
       {new Date().getFullYear()}
     </Typography>
   );
