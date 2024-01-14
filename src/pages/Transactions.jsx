@@ -5,34 +5,39 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { useSelector } from 'react-redux';
+import { decrypt } from '../misc/encrypt';
 
 const defaultTheme = createTheme();
 
 const columns = [
-  { field: 'date', headerName: 'Date', flex: 1 },
-  { field: 'type', headerName: 'Type', flex: 1 },
-  { field: 'category', headerName: 'Category', flex: 1 },
+  { field: 'date', headerName: 'Date', flex: 1, minWidth: 100 },
+  { field: 'type', headerName: 'Type', flex: 1, minWidth: 100 },
+  { field: 'category', headerName: 'Category', flex: 1, minWidth: 150 },
   {
     field: 'subCategory',
     headerName: 'Sub Category',
     flex: 1,
+    minWidth: 150,
   },
   {
     field: 'account',
     headerName: 'Account',
-    flex: 1,
+    flex: 0.75,
+    minWidth: 100,
   },
   {
     field: 'amount',
     headerName: 'Amount',
-    flex: 1,
+    flex: 0.75,
     type: 'number',
+    minWidth: 100,
   },
   {
     field: 'note',
     headerName: 'Note',
-    flex: 1,
+    flex: 1.5,
     sortable: false,
+    minWidth: 150,
   },
 ];
 
@@ -48,6 +53,7 @@ const Transactions = () => {
     let list = [];
     querySnapshot.forEach((doc) => {
       const data = doc.data();
+      data.note = decrypt(data.note);
       list.push(data);
     });
     setTransactionList(list.sort((a, b) => b.createdAt - a.createdAt));
@@ -81,7 +87,9 @@ const Transactions = () => {
                     paginationModel: { page: 0, pageSize: 10 },
                   },
                 }}
+                loading={transactionList.length === 0}
                 pageSizeOptions={[10, 20]}
+                disableColumnSelector
                 getRowId={(row) => row.transactionId}
               />
             </Container>

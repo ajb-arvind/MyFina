@@ -15,8 +15,8 @@ export function limitStringDisplay(sentence, uptoLength = 50) {
 }
 
 export const InitialUserAccounts = {
-  0: { value: 'cash', label: 'Cash', isEnabled: true },
-  1: { value: 'online', label: 'online', isEnabled: true },
+  0: { value: 'Cash', label: 'Cash', isEnabled: true },
+  1: { value: 'Online', label: 'Online', isEnabled: true },
 };
 
 export const categories = [
