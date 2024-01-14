@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   Avatar,
   Button,
@@ -9,41 +9,21 @@ import {
   Box,
   Typography,
   Container,
-} from "@mui/material";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+} from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   updateProfile,
-} from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../firebase";
-import { loginUser } from "../redux/features/user/userSlice";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { InitialUserAccounts, InitialUserCategories } from "../misc/Utils";
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link
-        color="inherit"
-        href="https://mui.com/"
-        style={{ textDecoration: "none" }}
-      >
-        MyFinance
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+} from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase';
+import { loginUser } from '../redux/features/user/userSlice';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { InitialUserAccounts, InitialUserCategories } from '../misc/Utils';
+import { Copyright } from '../components';
 
 const defaultTheme = createTheme();
 
@@ -55,9 +35,9 @@ const Register = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const emailId = data.get("email");
-    const password = data.get("password");
-    const name = `${data.get("firstName")} ${data.get("lastName")}`;
+    const emailId = data.get('email');
+    const password = data.get('password');
+    const name = `${data.get('firstName')} ${data.get('lastName')}`;
 
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -66,13 +46,13 @@ const Register = () => {
         password
       );
 
-      await setDoc(doc(db, "users", userCredential.user.uid), {
+      await setDoc(doc(db, 'users', userCredential.user.uid), {
         name,
         email: emailId,
         userId: userCredential.user.uid,
         categories: InitialUserCategories,
         accounts: InitialUserAccounts,
-        profileUrl: "",
+        profileUrl: '',
         createdAt: Date.now(),
       });
 
@@ -89,7 +69,7 @@ const Register = () => {
           isLogin: true,
         })
       );
-      navigate("/home");
+      navigate('/home');
     } catch (error) {
       console.log(error.message);
     }
@@ -106,12 +86,12 @@ const Register = () => {
         <Box
           sx={{
             marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -180,7 +160,7 @@ const Register = () => {
                 <Link
                   href="login"
                   variant="body2"
-                  style={{ textDecoration: "none" }}
+                  style={{ textDecoration: 'none' }}
                 >
                   Already have an account?
                 </Link>
