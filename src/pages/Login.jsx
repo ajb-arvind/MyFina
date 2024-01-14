@@ -11,6 +11,7 @@ import {
   Box,
   Typography,
   Container,
+  Alert,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
@@ -21,7 +22,8 @@ import { auth, db } from '../firebase';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../redux/features/user/userSlice';
 import { useNavigate } from 'react-router-dom';
-import { Copyright } from '../components';
+import { Copyright, PasswordResetDialog } from '../components';
+import { useState } from 'react';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -72,6 +74,20 @@ const Login = () => {
 
   const defaultTheme = createTheme();
 
+  const [open, setOpen] = useState(false);
+  const [resetMessage, setResetMessage] = useState({
+    message: '',
+    isSuccess: true,
+  });
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -120,6 +136,15 @@ const Login = () => {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
+            {resetMessage.message ? (
+              <Alert
+                severity={resetMessage.isSuccess ? 'success' : 'error'}
+                sx={{ mt: 2 }}
+              >
+                {resetMessage.message}
+              </Alert>
+            ) : null}
+
             <Button
               type="submit"
               fullWidth
@@ -131,9 +156,9 @@ const Login = () => {
             <Grid container>
               <Grid item xs>
                 <Link
-                  href="#"
-                  variant="body2"
-                  style={{ textDecoration: 'none' }}
+                  variant="button"
+                  style={{ textDecoration: 'none', cursor: 'pointer' }}
+                  onClick={handleClickOpen}
                 >
                   Forgot password?
                 </Link>
@@ -150,6 +175,12 @@ const Login = () => {
             </Grid>
           </Box>
         </Box>
+        <PasswordResetDialog
+          open={open}
+          handleClickOpen={handleClickOpen}
+          handleClose={handleClose}
+          setResetMessage={setResetMessage}
+        />
         <Copyright sx={{ mt: 20 }} />
       </Container>
     </ThemeProvider>

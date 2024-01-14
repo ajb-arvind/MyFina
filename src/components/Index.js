@@ -5,4 +5,8 @@ export { default as InputTransaction } from './InputTransaction';
 export { default as EmailActivation } from './EmailActivation';
 export { default as NewTransaction } from './NewTransaction';
 export { default as DisplayCategories } from './DisplayCategories';
+export { default as DisplayAccounts } from './DisplayAccounts';
+export { default as CommonCategory } from './CommonCategory';
+export { default as CommonCategoryList } from './CommonCategoryList';
+export { default as PasswordResetDialog } from './PasswordResetDialog';
 export { default as Copyright } from './Copyright';

@@ -1,179 +1,14 @@
-import {
-  Box,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Checkbox,
-  Button,
-  TextField,
-  Typography,
-  IconButton,
-} from '@mui/material';
+import { Box, Grid, Button, Typography } from '@mui/material';
 
 import { useState } from 'react';
-import Title from './Title';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CheckIcon from '@mui/icons-material/Check';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
-import { store } from '../redux/store';
-import {
-  pushToAccounts,
-  pushToCategories,
-  updateAccounts,
-  updateCategories,
-  updateCheckbox,
-  updateSubCategories,
-} from '../redux/features/user/userSlice';
-import { useDispatch, useSelector } from 'react-redux';
+
+import { useSelector } from 'react-redux';
+import CommonCategoryList from './CommonCategoryList';
 
 const CATEGORIES = 'Categories';
 const SUB_CATEGORIES = 'Sub Categories';
-const ACCOUNTS = 'Accounts';
-
-const CommonCategory = ({
-  id,
-  data,
-  selectedCategoryId,
-  onClickCategory,
-  onClickCheckbox,
-  handleDeleteCategory,
-  isEdit,
-}) => {
-  const currentCategories = data[id];
-  return (
-    <ListItem
-      sx={[
-        selectedCategoryId === id && {
-          backgroundColor: (theme) => theme.palette.secondary.main,
-          color: 'white',
-        },
-        { borderRadius: 2 },
-      ]}
-    >
-      {isEdit && (
-        <ListItemIcon>
-          <Checkbox
-            edge="start"
-            checked={currentCategories?.isEnabled}
-            onChange={onClickCheckbox}
-          />
-        </ListItemIcon>
-      )}
-      <ListItemText
-        primary={currentCategories?.label}
-        onClick={onClickCategory}
-        sx={[currentCategories.isCategory && { cursor: 'pointer' }]}
-      />
-      {isEdit && (
-        <IconButton>
-          <DeleteIcon onClick={handleDeleteCategory} />
-        </IconButton>
-      )}
-    </ListItem>
-  );
-};
-
-const CommonCategoryList = ({
-  title,
-  list,
-  data,
-  selectedCategoryId,
-  onClickCategory,
-  isEdit,
-}) => {
-  const [inputValue, setInputValue] = useState('');
-  const dispatch = useDispatch();
-
-  const handlePushToData = () => {
-    if (title != ACCOUNTS && inputValue !== '') {
-      title === CATEGORIES &&
-        dispatch(pushToCategories({ inputValue, isCategory: true }));
-      title === SUB_CATEGORIES &&
-        dispatch(
-          pushToCategories({
-            inputValue,
-            isCategory: false,
-            selectedCategoryId,
-          })
-        );
-    }
-    if (title === ACCOUNTS) {
-      dispatch(pushToAccounts(inputValue));
-    }
-    setInputValue('');
-  };
-
-  const toggleCheckbox = (id) => {
-    title === ACCOUNTS && dispatch(updateCheckbox({ type: 'accounts', id }));
-    title != ACCOUNTS && dispatch(updateCheckbox({ type: 'categories', id }));
-  };
-
-  const handleDeleteFromData = (id) => {
-    if (confirm(`Are sure to delete the ${data[id].value}`)) {
-      title === ACCOUNTS && dispatch(updateAccounts(id));
-      title === SUB_CATEGORIES &&
-        dispatch(
-          updateSubCategories({ parentId: selectedCategoryId, childId: id })
-        );
-
-      title === CATEGORIES && dispatch(updateCategories(id));
-    }
-  };
-
-  return (
-    <>
-      <List sx={{ width: '100%', maxWidth: 360 }}>
-        <Title> {title}</Title>
-        {list?.length > 0 &&
-          list.map((id) => {
-            return (
-              <CommonCategory
-                key={id}
-                id={id}
-                data={data}
-                selectedCategoryId={selectedCategoryId}
-                onClickCategory={() =>
-                  title === CATEGORIES && onClickCategory(id)
-                }
-                onClickCheckbox={() => toggleCheckbox(id)}
-                handleDeleteCategory={() => handleDeleteFromData(id)}
-                isEdit={isEdit}
-              />
-            );
-          })}
-      </List>
-      {isEdit && (
-        <Box
-          sx={{
-            width: '100%',
-            maxWidth: 360,
-            display: 'flex',
-            justifyContent: 'center',
-            gap: 2,
-            p: 2,
-          }}
-        >
-          <TextField
-            variant="outlined"
-            label={
-              (title === ACCOUNTS && ACCOUNTS) ||
-              (title === CATEGORIES && CATEGORIES) ||
-              (title === SUB_CATEGORIES && SUB_CATEGORIES)
-            }
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-          <Button variant="outlined" onClick={handlePushToData}>
-            <CheckIcon />
-          </Button>
-        </Box>
-      )}
-    </>
-  );
-};
 
 const DisplayCategories = () => {
   const { user } = useSelector((state) => state.user);
@@ -187,8 +22,6 @@ const DisplayCategories = () => {
     return categoriesList;
   };
 
-  //accountList
-  const accountList = Object.keys(user.accounts);
   //Category List
   const categoriesList = getAllCategoriesList();
 
@@ -201,13 +34,10 @@ const DisplayCategories = () => {
 
   const handleSaveAllChanges = async () => {
     if (confirm('Are you sure to confirm your changes')) {
-      const userId = store.getState()?.user?.user?.userId;
-
       try {
         const docRef = doc(db, 'users', user.userId);
         await updateDoc(docRef, {
           categories: user.categories,
-          accounts: user.accounts,
         });
         alert('SUCCESS! Accounts & Categories Successfully saved');
       } catch (error) {
@@ -222,11 +52,13 @@ const DisplayCategories = () => {
     <Box>
       <Grid
         container
-        sx={{ my: 4, display: 'flex', gap: 1, alignItems: 'center' }}
+        sx={{
+          display: 'flex',
+          flexDirection: 'row-reverse',
+          gap: 1,
+          alignItems: 'center',
+        }}
       >
-        <Typography>
-          {isEdit ? 'Save all the changes' : 'Edit Categories'}
-        </Typography>
         <Button
           variant="contained"
           type="submit"
@@ -241,15 +73,6 @@ const DisplayCategories = () => {
           {isEdit ? 'Save All' : 'Edit'}
         </Button>
       </Grid>
-      <Grid px={{ xs: 0, sm: 5 }}>
-        <CommonCategoryList
-          title={ACCOUNTS}
-          list={accountList}
-          data={user.accounts}
-          isEdit={isEdit}
-        />
-      </Grid>
-
       <Grid container spacing={{ sm: 2 }} px={{ xs: 0, sm: 5 }}>
         <Grid item xs={12} sm={6}>
           {categoriesList?.length > 0 && (

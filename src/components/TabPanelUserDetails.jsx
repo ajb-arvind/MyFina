@@ -1,9 +1,7 @@
 import {
+  Alert,
   Avatar,
   Button,
-  Card,
-  CardContent,
-  CssBaseline,
   Divider,
   Grid,
   Paper,
@@ -11,6 +9,8 @@ import {
 } from '@mui/material';
 import Title from './Title';
 import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import PasswordResetDialog from './PasswordResetDialog';
 
 const UploadProfilePhoto = () => {
   return (
@@ -52,6 +52,20 @@ const UploadProfilePhoto = () => {
 };
 
 const AccountDetails = ({ name, email }) => {
+  const [open, setOpen] = useState(false);
+  const [resetMessage, setResetMessage] = useState({
+    message: '',
+    isSuccess: true,
+  });
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <Paper sx={{ p: 4 }}>
       <Title>Account Details</Title>
@@ -62,6 +76,27 @@ const AccountDetails = ({ name, email }) => {
       <Typography variant="h6" sx={{ mt: 2 }}>
         Email: {email}
       </Typography>
+
+      {resetMessage.message ? (
+        <Alert
+          severity={resetMessage.isSuccess ? 'success' : 'error'}
+          sx={{ mt: 2 }}
+        >
+          {resetMessage.message}
+        </Alert>
+      ) : (
+        <Button variant="outlined" onClick={handleClickOpen} sx={{ mt: 2 }}>
+          Change Password
+        </Button>
+      )}
+
+      <PasswordResetDialog
+        open={open}
+        handleClickOpen={handleClickOpen}
+        handleClose={handleClose}
+        setResetMessage={setResetMessage}
+        resetEmail={email}
+      />
     </Paper>
   );
 };
