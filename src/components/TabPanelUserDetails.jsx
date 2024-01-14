@@ -11,8 +11,9 @@ import Title from './Title';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import PasswordResetDialog from './PasswordResetDialog';
+import { deepOrange } from '@mui/material/colors';
 
-const UploadProfilePhoto = () => {
+const UploadProfilePhoto = ({ name }) => {
   return (
     <Paper sx={{ width: 240, p: 2, pb: 4 }}>
       <Title sx={{ p: 4 }}>Account Details</Title>
@@ -28,10 +29,11 @@ const UploadProfilePhoto = () => {
       >
         <Grid item>
           <Avatar
-            alt="Remy Sharp"
-            src="/static/images/avatar/1.jpg"
-            sx={{ width: 80, height: 80 }}
-          />
+            alt={name}
+            sx={{ bgcolor: deepOrange[500], width: 80, height: 80 }}
+          >
+            {name.match(/\b(\w)/g).join('')}
+          </Avatar>
         </Grid>
         <Grid item>
           <Typography
@@ -107,7 +109,7 @@ const TabPanelUserDetails = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={4} lg={3}>
-        <UploadProfilePhoto />
+        <UploadProfilePhoto name={user.name} />
       </Grid>
       <Grid item xs={12} md={8} lg={9}>
         <AccountDetails name={user.name} email={user.email} />

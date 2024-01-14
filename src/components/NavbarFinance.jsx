@@ -17,9 +17,10 @@ import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../redux/features/user/userSlice';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import AppLogo from '../assets/MyFina.png';
+import { deepOrange } from '@mui/material/colors';
 
 const pages = [
   { label: 'DashBoard', url: '/home' },
@@ -35,6 +36,8 @@ const settings = [
   },
 ];
 const NavbarFinance = () => {
+  const { name } = useSelector((state) => state.user.user);
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
@@ -154,7 +157,9 @@ const NavbarFinance = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt={name} sx={{ bgcolor: deepOrange[500] }}>
+                  {name.match(/\b(\w)/g).join('')}
+                </Avatar>
               </IconButton>
             </Tooltip>
             <Menu
