@@ -8,6 +8,12 @@ export function formatDateDDYMMYYY(date) {
   return formattedDate;
 }
 
+export function limitStringDisplay(sentence, uptoLength = 50) {
+  return sentence.length > uptoLength
+    ? `${sentence.substring(0, uptoLength)}...`
+    : sentence;
+}
+
 export const InitialUserAccounts = {
   0: { value: 'cash', label: 'Cash', isEnabled: true },
   1: { value: 'online', label: 'online', isEnabled: true },
@@ -582,15 +588,3 @@ export const InitialUserCategories = {
 
   86: { value: 'Other', label: 'Other', isEnabled: true, subCategory: [] },
 };
-
-function getAllCategories(data) {
-  let list = [];
-  for (const [key, value] of Object.entries(data)) {
-    if (value.isCategory) {
-      list.push(key);
-    }
-  }
-  return list;
-}
-
-// console.log(getAllCategories(InitialUserCategories));

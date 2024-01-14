@@ -17,11 +17,14 @@ import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../redux/features/user/userSlice';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import AppLogo from '../assets/MyFina.png';
 
-const pages = [{ label: 'DashBoard', url: '/home' }];
+const pages = [
+  { label: 'DashBoard', url: '/home' },
+  { label: 'Transactions', url: '/transactions' },
+];
 const settings = [
   {
     label: 'Profile',
@@ -70,7 +73,9 @@ const NavbarFinance = () => {
 
               width: 150,
               height: 50,
+              cursor: 'pointer',
             }}
+            onClick={() => navigate('/home')}
           />
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -128,7 +133,9 @@ const NavbarFinance = () => {
               sx={{
                 width: 150,
                 height: 50,
+                cursor: 'pointer',
               }}
+              onClick={() => navigate('/home')}
             />
           </Box>
 

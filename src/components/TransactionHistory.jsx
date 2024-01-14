@@ -7,54 +7,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Title from './Title';
 import { Grid } from '@mui/material';
-
-// Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-  return { id, date, name, shipTo, paymentMethod, amount };
-}
-
-const rows = [
-  createData(
-    0,
-    '16 Mar, 2019',
-    'Elvis Presley',
-    'Tupelo, MS',
-    'VISA ⠀•••• 3719',
-    312.44
-  ),
-  createData(
-    1,
-    '16 Mar, 2019',
-    'Paul McCartney',
-    'London, UK',
-    'VISA ⠀•••• 2574',
-    866.99
-  ),
-  createData(
-    2,
-    '16 Mar, 2019',
-    'Tom Scholz',
-    'Boston, MA',
-    'MC ⠀•••• 1253',
-    100.81
-  ),
-  createData(
-    3,
-    '16 Mar, 2019',
-    'Michael Jackson',
-    'Gary, IN',
-    'AMEX ⠀•••• 2000',
-    654.39
-  ),
-  createData(
-    4,
-    '15 Mar, 2019',
-    'Bruce Springsteen',
-    'Long Branch, NJ',
-    'VISA ⠀•••• 5919',
-    212.79
-  ),
-];
+import { decrypt } from '../misc/encrypt';
+import { limitStringDisplay } from '../misc/Utils';
 
 function preventDefault(event) {
   event.preventDefault();
@@ -63,31 +17,40 @@ function preventDefault(event) {
 export default function TransactionHistory({ transactionList }) {
   return (
     <React.Fragment>
-      <Title>Recent Orders</Title>
-      <Table size="small">
+      <Title>Recent Transaction</Title>
+      <Table size="medium">
         <TableHead>
           <TableRow>
             <TableCell>Date</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
+            <TableCell>Type</TableCell>
+            <TableCell>Category</TableCell>
+            <TableCell>Sub Category</TableCell>
+            <TableCell>Amount</TableCell>
+            <TableCell>Note</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {transactionList.map((item) => {
             return (
-              <TableRow key={item.createdAt}>
+              <TableRow
+                sx={{ textTransform: 'capitalize' }}
+                key={item.createdAt}
+              >
                 <TableCell>{item?.date}</TableCell>
+                <TableCell>{item?.type}</TableCell>
                 <TableCell>{item?.category}</TableCell>
                 <TableCell>{item?.subCategory}</TableCell>
                 <TableCell> {item?.amount}</TableCell>
+                <TableCell>
+                  {limitStringDisplay(decrypt(item?.note), 15)}
+                </TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
       <Grid container justifyContent="flex-end">
-        <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
+        <Link color="primary" href="/transactions" sx={{ mt: 3 }}>
           See more transactions
         </Link>
       </Grid>
