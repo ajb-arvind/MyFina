@@ -13,7 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../redux/features/user/userSlice';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
@@ -115,25 +115,23 @@ const NavbarFinance = () => {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/home"
+
+          <Box
             sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              display: { xs: 'flex', md: 'none' },
             }}
           >
-            LOGO
-          </Typography>
+            <Box
+              component="img"
+              src={AppLogo}
+              sx={{
+                width: 150,
+                height: 50,
+              }}
+            />
+          </Box>
+
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
@@ -171,15 +169,15 @@ const NavbarFinance = () => {
               {settings.map((setting, index) => {
                 const isLastItem = index === settings.length - 1;
                 return (
-                  <Link key={setting.label} to={setting.url}>
-                    <MenuItem
-                      onClick={isLastItem ? handleLogout : handleCloseUserMenu}
-                    >
-                      <Typography textAlign="center">
-                        {setting.label}
-                      </Typography>
-                    </MenuItem>
-                  </Link>
+                  <MenuItem
+                    key={setting.label}
+                    onClick={() => {
+                      isLastItem ? handleLogout() : handleCloseUserMenu();
+                      navigate(setting.url);
+                    }}
+                  >
+                    <Typography textAlign="center">{setting.label}</Typography>
+                  </MenuItem>
                 );
               })}
             </Menu>

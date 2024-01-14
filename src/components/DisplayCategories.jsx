@@ -158,7 +158,11 @@ const CommonCategoryList = ({
         >
           <TextField
             variant="outlined"
-            label="Add Category"
+            label={
+              (title === ACCOUNTS && ACCOUNTS) ||
+              (title === CATEGORIES && CATEGORIES) ||
+              (title === SUB_CATEGORIES && SUB_CATEGORIES)
+            }
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
           />
@@ -174,8 +178,6 @@ const CommonCategoryList = ({
 const DisplayCategories = () => {
   const { user } = useSelector((state) => state.user);
   const [isEdit, setIsEdit] = useState(false);
-
-  console.log(user);
 
   const getAllCategoriesList = () => {
     let categoriesList = [];
@@ -241,7 +243,7 @@ const DisplayCategories = () => {
       </Grid>
       <Grid px={{ xs: 0, sm: 5 }}>
         <CommonCategoryList
-          title="Accounts"
+          title={ACCOUNTS}
           list={accountList}
           data={user.accounts}
           isEdit={isEdit}
@@ -252,7 +254,7 @@ const DisplayCategories = () => {
         <Grid item xs={12} sm={6}>
           {categoriesList?.length > 0 && (
             <CommonCategoryList
-              title="Categories"
+              title={CATEGORIES}
               list={categoriesList}
               data={user.categories}
               onClickCategory={setSelectedCategoryId}
@@ -263,7 +265,7 @@ const DisplayCategories = () => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <CommonCategoryList
-            title="Sub Categories"
+            title={SUB_CATEGORIES}
             list={subCategoriesList}
             data={user.categories}
             selectedCategoryId={selectedCategoryId}

@@ -10,11 +10,7 @@ export default function Copyright(props) {
       {...props}
     >
       {'© '}
-      <Link
-        color="inherit"
-        href="https://mui.com/"
-        style={{ textDecoration: 'none' }}
-      >
+      <Link color="inherit" href="" style={{ textDecoration: 'none' }}>
         MyFinance
       </Link>{' '}
       {new Date().getFullYear()}
