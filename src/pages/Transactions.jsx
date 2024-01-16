@@ -87,7 +87,6 @@ const Transactions = () => {
                     paginationModel: { page: 0, pageSize: 10 },
                   },
                 }}
-                loading={transactionList.length === 0}
                 pageSizeOptions={[10, 20]}
                 disableColumnSelector
                 getRowId={(row) => row.transactionId}

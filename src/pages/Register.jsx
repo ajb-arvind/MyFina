@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  signOut,
   updateProfile,
 } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
@@ -22,7 +23,11 @@ import { auth, db } from '../firebase';
 import { loginUser } from '../redux/features/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { InitialUserAccounts, InitialUserCategories } from '../misc/Utils';
+import {
+  InitialUserAccounts,
+  InitialUserCategories,
+  InitialUserIncomeCategories,
+} from '../misc/Utils';
 import { Copyright } from '../components';
 
 const defaultTheme = createTheme();
@@ -50,6 +55,7 @@ const Register = () => {
         name,
         email: emailId,
         userId: userCredential.user.uid,
+        incomeCategories: InitialUserIncomeCategories,
         categories: InitialUserCategories,
         accounts: InitialUserAccounts,
         profileUrl: '',
@@ -65,18 +71,23 @@ const Register = () => {
       const { email, displayName, emailVerified, uid } = userCredential.user;
       dispatch(
         loginUser({
-          user: { email, displayName, emailVerified, uid },
+          user: {
+            email,
+            displayName,
+            emailVerified,
+            uid,
+            InitialUserIncomeCategories,
+            InitialUserCategories,
+            InitialUserAccounts,
+          },
           isLogin: true,
         })
       );
-      navigate('/home');
+      await signOut(auth);
+      navigate('/login');
     } catch (error) {
       console.log(error.message);
     }
-  };
-
-  const sendMailForVerification = async () => {
-    await sendEmailVerification(auth.currentUser);
   };
 
   return (

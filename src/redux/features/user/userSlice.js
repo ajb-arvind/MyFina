@@ -77,6 +77,8 @@ export const userSlice = createSlice({
         value: action.payload,
       };
     },
+    //TODO: pushToIncomeCategories
+    //TODO: updateIncomeCategories
   },
 });
 

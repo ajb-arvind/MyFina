@@ -9,13 +9,12 @@ import {
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
-import { categories, formatDateDDYMMYYY } from '../misc/Utils';
+import { formatDateDDYMMYYY } from '../misc/Utils';
 import { v4 as uuidv4 } from 'uuid';
 import { store } from '../redux/store';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { encrypt } from '../misc/encrypt';
-import { useNavigate } from 'react-router-dom';
 
 export default function NewTransaction() {
   const [type, setType] = useState('income');
@@ -34,7 +33,12 @@ export default function NewTransaction() {
     return list;
   }
 
-  const CategoriesOption = getAllCategories(userData.categories);
+  let CategoriesOption, subCategoryOption, SubCategoryIds;
+
+  CategoriesOption =
+    type === 'income'
+      ? getAllCategories(userData.incomeCategories)
+      : getAllCategories(userData.categories);
 
   const [date, setDate] = useState(formatDateDDYMMYYY(new Date()));
   const [selectedCategory, setSelectedCategory] = useState({
@@ -43,18 +47,34 @@ export default function NewTransaction() {
     value: '',
     isEnable: false,
   });
+
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
   const [selectedAccount, setSelectedAccount] = useState(null);
 
-  const SubCategoryIds = selectedCategory?.subCategory;
+  SubCategoryIds = selectedCategory?.subCategory;
 
   function getAllSubCategories(SubCategoryIds) {
-    return SubCategoryIds?.map((item) => userData.categories[item]) || [];
+    return type === 'income'
+      ? SubCategoryIds?.map((item) => userData.incomeCategories[item]) || []
+      : SubCategoryIds?.map((item) => userData.categories[item]) || [];
   }
 
-  const subCategoryOption = getAllSubCategories(SubCategoryIds);
+  subCategoryOption = getAllSubCategories(SubCategoryIds);
 
   const handleType = (event, newType) => {
+    CategoriesOption =
+      newType === 'income'
+        ? getAllCategories(userData.incomeCategories)
+        : getAllCategories(userData.categories);
+    setSelectedCategory({
+      label: '',
+      subCategory: [],
+      value: '',
+      isEnable: false,
+    });
+    setSelectedSubCategory(null);
+    const SubCategoryIds = selectedCategory?.subCategory;
+    subCategoryOption = getAllSubCategories(SubCategoryIds);
     setType(newType);
   };
 
@@ -68,6 +88,7 @@ export default function NewTransaction() {
         account: data.get('account'),
         amount: Number(data.get('amount')),
         category: data.get('category'),
+        incomeCategories: data.get('incomeCategories'),
         date: data.get('date'),
         note: encrypt(data.get('note')),
         subCategory: data.get('subCategory'),
@@ -142,9 +163,15 @@ export default function NewTransaction() {
             sx={{ py: 1 }}
             id="category"
             options={CategoriesOption}
-            value={selectedCategory}
+            value={selectedCategory || null}
             onChange={(event, newValue) => {
               setSelectedCategory(newValue);
+            }}
+            onInputChange={(event, newInputValue, reason) => {
+              if (reason === 'clear') {
+                setSelectedSubCategory(null);
+              } else {
+              }
             }}
             renderInput={(params) => (
               <TextField {...params} label="Category" name="category" />
@@ -157,7 +184,7 @@ export default function NewTransaction() {
             sx={{ py: 1 }}
             id="subCategory"
             options={subCategoryOption}
-            value={selectedSubCategory}
+            value={selectedSubCategory || null}
             onChange={(event, newValue) => {
               setSelectedSubCategory(newValue);
             }}

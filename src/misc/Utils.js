@@ -36,6 +36,86 @@ export const categories = [
   { value: 'Investment', label: 'Investment' },
 ];
 
+export const InitialUserIncomeCategories = {
+  0: {
+    value: 'Wages',
+    label: 'Wages',
+    isEnabled: true,
+    subCategory: [1, 2],
+    isCategory: true,
+  },
+  1: {
+    value: 'Salary',
+    label: 'Salary',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+  2: {
+    value: 'Bonus',
+    label: 'Bonus',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+  3: {
+    value: 'Other',
+    label: 'Other',
+    isEnabled: true,
+    subCategory: [4, 5, 6, 7, 8, 9, 10],
+    isCategory: true,
+  },
+  4: {
+    value: 'Transfer from savings',
+    label: 'Transfer from savings',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+  5: {
+    value: 'Transfer from MF',
+    label: 'Transfer from MF',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+  6: {
+    value: 'Interest income',
+    label: 'Interest income',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+  7: {
+    value: 'Dividends',
+    label: 'Dividends',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+  8: {
+    value: 'Gifts',
+    label: 'Gifts',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+  9: {
+    value: 'Refunds',
+    label: 'Refunds',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+  10: {
+    value: 'Other',
+    label: 'Other',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+};
+
 export const InitialUserCategories = {
   // Transportation
   0: {

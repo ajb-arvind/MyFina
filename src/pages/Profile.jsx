@@ -17,6 +17,7 @@ import TabPanelUserDetails from '../components/TabPanelUserDetails';
 import { useSelector } from 'react-redux';
 import DisplayCategories from '../components/DisplayCategories';
 import DisplayAccounts from '../components/DisplayAccounts';
+import DisplayIncomeCategories from '../components/DisplayIncomeCategories';
 
 function TabPanel({ children, value, index, ...other }) {
   return (
@@ -111,8 +112,17 @@ const Profile = () => {
                     }}
                   />
                   <Tab
-                    label="Categories"
+                    label="Income Categories"
                     {...a11yProps(2)}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      mt: 2,
+                    }}
+                  />
+                  <Tab
+                    label="Expense Categories"
+                    {...a11yProps(3)}
                     sx={{
                       display: 'flex',
                       alignItems: 'flex-start',
@@ -127,6 +137,12 @@ const Profile = () => {
                   <DisplayAccounts />
                 </TabPanel>
                 <TabPanel value={value} index={2}>
+                  <DisplayIncomeCategories
+                    categoriesData={user.incomeCategories}
+                    accountsData={user.accounts}
+                  />
+                </TabPanel>
+                <TabPanel value={value} index={3}>
                   <DisplayCategories
                     categoriesData={user.categories}
                     accountsData={user.accounts}

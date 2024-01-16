@@ -45,12 +45,15 @@ const CommonCategoryList = ({
     if (title === ACCOUNTS) {
       dispatch(pushToAccounts(inputValue));
     }
+
+    //TODO: pushTOIncomeCategories
     setInputValue('');
   };
 
   const toggleCheckbox = (id) => {
     title === ACCOUNTS && dispatch(updateCheckbox({ type: 'accounts', id }));
     title != ACCOUNTS && dispatch(updateCheckbox({ type: 'categories', id }));
+    //TODO: updateCheckbox type:incomeCategories
   };
 
   const handleDeleteFromData = (id) => {
@@ -62,6 +65,7 @@ const CommonCategoryList = ({
         );
 
       title === CATEGORIES && dispatch(updateCategories(id));
+      //TODO: updateIncomeCategories 
     }
   };
 

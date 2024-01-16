@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import AppLogo from '../assets/MyFina.png';
 import { deepOrange } from '@mui/material/colors';
+import { Paper } from '@mui/material';
 
 const pages = [
   { label: 'DashBoard', url: '/home' },
@@ -37,7 +38,7 @@ const settings = [
   },
 ];
 const NavbarFinance = () => {
-  const { name } = useSelector((state) => state.user.user);
+  const { name } = useSelector((state) => state.user?.user);
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -69,18 +70,22 @@ const NavbarFinance = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box
-            component="img"
-            src={AppLogo}
-            sx={{
-              display: { xs: 'none', md: 'flex' },
-
-              width: 150,
-              height: 50,
-              cursor: 'pointer',
-            }}
-            onClick={() => navigate('/home')}
-          />
+          <Paper sx={{ m: 1 }}>
+            {' '}
+            <Box
+              component="img"
+              src={AppLogo}
+              sx={{
+                display: { xs: 'none', md: 'flex' },
+                width: 150,
+                height: 50,
+                cursor: 'pointer',
+                mx: 2,
+                my: 0.3,
+              }}
+              onClick={() => navigate('/home')}
+            />
+          </Paper>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -131,16 +136,19 @@ const NavbarFinance = () => {
               display: { xs: 'flex', md: 'none' },
             }}
           >
-            <Box
-              component="img"
-              src={AppLogo}
-              sx={{
-                width: 150,
-                height: 50,
-                cursor: 'pointer',
-              }}
-              onClick={() => navigate('/home')}
-            />
+            <Paper sx={{ m: 1 }}>
+              <Box
+                component="img"
+                src={AppLogo}
+                sx={{
+                  width: 150,
+                  height: 50,
+                  cursor: 'pointer',
+                  mx: 2,
+                }}
+                onClick={() => navigate('/home')}
+              />
+            </Paper>
           </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>

@@ -17,7 +17,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { doc, getDoc } from 'firebase/firestore';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../redux/features/user/userSlice';
@@ -61,11 +61,17 @@ const Login = () => {
 
       // redirect if email is not verified
       if (!emailVerified) {
-        navigate('/register');
+        await signOut(auth);
+        navigate('/login');
+        setResetMessage({
+          message: 'Verify Email before login',
+          isSuccess: false,
+        });
+      } else {
+        navigate('/home');
       }
 
       // redirect to home page
-      navigate('/home');
     } catch (error) {
       console.log(error);
       return;
