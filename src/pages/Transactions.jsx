@@ -78,7 +78,7 @@ const Transactions = () => {
               overflow: 'auto',
             }}
           >
-            <Container style={{ height: '90vh' }}>
+            <Container maxWidth="xl" style={{ height: '90vh' }}>
               <DataGrid
                 rows={transactionList}
                 columns={columns}

@@ -9,6 +9,7 @@ import {
   Transactions,
   Activation,
   Profile,
+  Stats,
 } from './pages';
 import { useSelector } from 'react-redux';
 
@@ -78,6 +79,11 @@ export const router = createBrowserRouter([
       {
         path: '/transactions',
         element: <Transactions />,
+        errorElement: <Error />,
+      },
+      {
+        path: '/stats',
+        element: <Stats />,
         errorElement: <Error />,
       },
       {
