@@ -25,6 +25,7 @@ import { deepOrange } from '@mui/material/colors';
 const pages = [
   { label: 'DashBoard', url: '/home' },
   { label: 'Transactions', url: '/transactions' },
+  { label: 'Stats', url: '/stats' },
 ];
 const settings = [
   {
