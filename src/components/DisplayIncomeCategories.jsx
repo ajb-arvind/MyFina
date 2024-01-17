@@ -1,25 +1,24 @@
 import { Box, Grid, Button, Typography } from '@mui/material';
-
 import CommonCategoryList from './CommonCategoryList';
-import { useState } from 'react';
 
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { db } from '../firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { storeUpdatedUsersList } from '../redux/features/user/userSlice';
 
-const CATEGORIES = 'Categories';
-const SUB_CATEGORIES = 'Sub Categories';
+const INCOME_CATEGORIES = 'Income Categories';
+const INCOME_SUB_CATEGORIES = 'Income Sub Categories';
 
-const DisplayCategories = () => {
+const DisplayIncomeCategories = () => {
   const { user } = useSelector((state) => state.user);
   const [isEdit, setIsEdit] = useState(false);
   const dispatch = useDispatch();
 
   const getAllCategoriesList = () => {
     let categoriesList = [];
-    for (const [key, value] of Object.entries(user.categories)) {
+    for (const [key, value] of Object.entries(user.incomeCategories)) {
       if (value.isCategory) categoriesList.push(key);
     }
     return categoriesList;
@@ -32,21 +31,24 @@ const DisplayCategories = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     categoriesList[0]
   );
+
   //Sub Category List
-  const subCategoriesList = user.categories[selectedCategoryId]?.subCategory;
+  const subCategoriesList =
+    user.incomeCategories[selectedCategoryId]?.subCategory;
 
   const handleSaveAllChanges = async () => {
     if (confirm('Are you sure to confirm your changes')) {
       try {
         const docRef = doc(db, 'users', user.userId);
         await updateDoc(docRef, {
-          categories: user.categories,
+          incomeCategories: user.incomeCategories,
         });
         alert('SUCCESS! Accounts & Categories Successfully saved');
       } catch (error) {
         alert('ERROR!', error.message);
         console.log(error);
       }
+      //TODO: CheckUpdated IncomeCategories
     } else {
       const docRef = doc(db, 'users', user.userId);
       const docSnap = await getDoc(docRef);
@@ -87,9 +89,9 @@ const DisplayCategories = () => {
         <Grid item xs={12} sm={6}>
           {categoriesList?.length > 0 && (
             <CommonCategoryList
-              title={CATEGORIES}
+              title={INCOME_CATEGORIES}
               list={categoriesList}
-              data={user.categories}
+              data={user.incomeCategories}
               onClickCategory={setSelectedCategoryId}
               selectedCategoryId={selectedCategoryId}
               isEdit={isEdit}
@@ -98,9 +100,9 @@ const DisplayCategories = () => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <CommonCategoryList
-            title={SUB_CATEGORIES}
+            title={INCOME_SUB_CATEGORIES}
             list={subCategoriesList}
-            data={user.categories}
+            data={user.incomeCategories}
             selectedCategoryId={selectedCategoryId}
             isEdit={isEdit}
           />
@@ -109,4 +111,4 @@ const DisplayCategories = () => {
     </Box>
   );
 };
-export default DisplayCategories;
+export default DisplayIncomeCategories;

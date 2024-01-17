@@ -6,41 +6,20 @@ import {
   Register,
   Error,
   DashBoard,
-  Activation,
+  Transactions,
   Profile,
+  Stats,
 } from './pages';
 import { useSelector } from 'react-redux';
 
-//action
-import { action as transactionAction } from './pages/DashBoard';
-
 function ProtectedRouter({ children, redirectTo, authPageRedirection }) {
-  // const { isLogin } = useSelector((state) => state.user);
-  // const user = useSelector((state) => state.user.user);
-  // if (authPageRedirection === "login") {
-  //   return isLogin ? <Navigate to={redirectTo} /> : children;
-  // }
-  // if (authPageRedirection === "register") {
-  //   return isLogin ? <Navigate to={redirectTo} /> : children;
-  // }
-  // if (authPageRedirection === "activation") {
-  //   if (isLogin) {
-  //     return !user.activationCompleted ? (
-  //       children
-  //     ) : (
-  //       <Navigate to={redirectTo} />
-  //     );
-  //   } else {
-  //     return <Navigate to="/login" />;
-  //   }
-  // }
-  // if (authPageRedirection === "home" || authPageRedirection === "profile") {
-  //   return isLogin && user.activationCompleted ? (
-  //     children
-  //   ) : (
-  //     <Navigate to={redirectTo} />
-  //   );
-  // }
+  const { isLogin } = useSelector((state) => state.user);
+
+  if (authPageRedirection === 'login' || authPageRedirection === 'register') {
+    return !isLogin ? children : <Navigate to={redirectTo} />;
+  }
+
+  return isLogin ? children : <Navigate to={redirectTo} />;
 }
 
 export const router = createBrowserRouter([
@@ -57,30 +36,38 @@ export const router = createBrowserRouter([
       {
         path: '/home',
         element: (
-          // <ProtectedRouter redirectTo="/activation" authPageRedirection="home">
-          <DashBoard />
-          // </ProtectedRouter>
+          <ProtectedRouter redirectTo="/login" authPageRedirection="home">
+            <DashBoard />
+          </ProtectedRouter>
         ),
         errorElement: <Error />,
-        action: transactionAction,
       },
       {
         path: '/profile',
         element: (
-          // <ProtectedRouter
-          //   redirectTo="/activation"
-          //   authPageRedirection="profile"
-          // >
-          <Profile />
-          // </ProtectedRouter>
+          <ProtectedRouter redirectTo="/login" authPageRedirection="profile">
+            <Profile />
+          </ProtectedRouter>
         ),
         errorElement: <Error />,
       },
       {
-        path: '/activation',
+        path: '/transactions',
         element: (
-          <ProtectedRouter redirectTo="/home" authPageRedirection="activation">
-            <Activation />
+          <ProtectedRouter
+            redirectTo="/login"
+            authPageRedirection="transactions"
+          >
+            <Transactions />
+          </ProtectedRouter>
+        ),
+        errorElement: <Error />,
+      },
+      {
+        path: '/stats',
+        element: (
+          <ProtectedRouter redirectTo="/login" authPageRedirection="stats">
+            <Stats />
           </ProtectedRouter>
         ),
         errorElement: <Error />,
@@ -89,16 +76,19 @@ export const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <Login />,
+    element: (
+      <ProtectedRouter redirectTo="/home" authPageRedirection="register">
+        <Login />
+      </ProtectedRouter>
+    ),
     errorElement: <Error />,
   },
   {
     path: '/register',
     element: (
-      // <ProtectedRouter redirectTo="/activation" authPageRedirection="register">
-      <Register />
-      //{" "}
-      // </ProtectedRouter>
+      <ProtectedRouter redirectTo="/home" authPageRedirection="register">
+        <Register />
+      </ProtectedRouter>
     ),
     errorElement: <Error />,
   },

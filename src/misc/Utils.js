@@ -1,4 +1,4 @@
-const today = new Date();
+export const today = new Date();
 
 export function formatDateDDYMMYYY(date) {
   const year = date.getFullYear();
@@ -8,9 +8,15 @@ export function formatDateDDYMMYYY(date) {
   return formattedDate;
 }
 
+export function limitStringDisplay(sentence, uptoLength = 50) {
+  return sentence.length > uptoLength
+    ? `${sentence.substring(0, uptoLength)}...`
+    : sentence;
+}
+
 export const InitialUserAccounts = {
-  0: { value: 'cash', label: 'Cash', isEnabled: true },
-  1: { value: 'online', label: 'online', isEnabled: true },
+  0: { value: 'Cash', label: 'Cash', isEnabled: true },
+  1: { value: 'Online', label: 'Online', isEnabled: true },
 };
 
 export const categories = [
@@ -30,197 +36,85 @@ export const categories = [
   { value: 'Investment', label: 'Investment' },
 ];
 
-// export const InitialUserCategories = [
-//   {
-//     value: 'Transportation',
-//     label: 'Transportation',
-//     isEnabled: true,
-//     subCategory: [
-//       { value: 'Fuel', label: 'Fuel', isEnabled: true },
-//       { value: 'Public transit', label: 'Public transit', isEnabled: true },
-//       { value: 'Repairs', label: 'Repairs', isEnabled: true },
-//       {
-//         value: 'Registration/license',
-//         label: 'Registration/license',
-//         isEnabled: true,
-//       },
-//       { value: 'Supplies', label: 'Supplies', isEnabled: true },
-//       { value: 'Others', label: 'Others', isEnabled: true },
-//     ],
-//   },
-//   {
-//     value: 'Everyday',
-//     label: 'Everyday',
-//     isEnabled: true,
-//     subCategory: [
-//       { value: 'Food', label: 'Food', isEnabled: true },
-//       { value: 'Restaurants', label: 'Restaurants', isEnabled: true },
-//       { value: 'Groceries', label: 'Groceries', isEnabled: true },
-//       { value: 'Clothes', label: 'Clothes', isEnabled: true },
-//       { value: 'Hair/Beauty', label: 'Hair/Beauty', isEnabled: true },
-//       {
-//         value: 'Laundry/Dry Cleaning',
-//         label: 'Laundry/Dry Cleaning',
-//         isEnabled: true,
-//       },
-//       { value: 'Subscription', label: 'Subscription', isEnabled: true },
-//       { value: 'Other', label: 'Other', isEnabled: true },
-//     ],
-//   },
-//   {
-//     value: 'Home',
-//     label: 'Home',
-//     isEnabled: true,
-//     subCategory: [
-//       { value: 'Rent/mortgage', label: 'Rent/mortgage', isEnabled: true },
-//       { value: 'Property taxes', label: 'Property taxes', isEnabled: true },
-//       { value: 'Furnishings', label: 'Furnishings', isEnabled: true },
-//       { value: 'Lawn/garden', label: 'Lawn/garden', isEnabled: true },
-//       { value: 'Supplies', label: 'Supplies', isEnabled: true },
-//       { value: 'Maintenance', label: 'Maintenance', isEnabled: true },
-//       { value: 'Improvements', label: 'Improvements', isEnabled: true },
-//       { value: 'Moving', label: 'Moving', isEnabled: true },
-//       { value: 'Other', label: 'Other', isEnabled: true },
-//     ],
-//   },
-//   {
-//     value: 'Travel',
-//     label: 'Travel',
-//     isEnabled: true,
-//     subCategory: [
-//       { value: 'Airfare', label: 'Airfare', isEnabled: true },
-//       { value: 'Hotels', label: 'Hotels', isEnabled: true },
-//       { value: 'Food', label: 'Food', isEnabled: true },
-//       { value: 'Transportation', label: 'Transportation', isEnabled: true },
-//       { value: 'Entertainment', label: 'Entertainment', isEnabled: true },
-//       { value: 'Other', label: 'Other', isEnabled: true },
-//     ],
-//   },
-//   {
-//     value: 'Parents',
-//     label: 'Parents',
-//     isEnabled: true,
-//     subCategory: [
-//       { value: 'Activities', label: 'Activities', isEnabled: true },
-//       { value: 'Allowance', label: 'Allowance', isEnabled: true },
-//       { value: 'Medical', label: 'Medical', isEnabled: true },
-//       { value: 'Childcare', label: 'Childcare', isEnabled: true },
-//       { value: 'Clothing', label: 'Clothing', isEnabled: true },
-//       { value: 'School', label: 'School', isEnabled: true },
-//       { value: 'Toys', label: 'Toys', isEnabled: true },
-//       { value: 'Other', label: 'Other', isEnabled: true },
-//     ],
-//   },
-//   {
-//     value: 'Entertainment',
-//     label: 'Entertainment',
-//     isEnabled: true,
-//     subCategory: [
-//       { value: 'Books', label: 'Books', isEnabled: true },
-//       { value: 'Concerts/shows', label: 'Concerts/shows', isEnabled: true },
-//       { value: 'Games', label: 'Games', isEnabled: true },
-//       { value: 'Hobbies', label: 'Hobbies', isEnabled: true },
-//       { value: 'Films', label: 'Films', isEnabled: true },
-//       { value: 'Music', label: 'Music', isEnabled: true },
-//       {
-//         value: 'Outdoor activities',
-//         label: 'Outdoor activities',
-//         isEnabled: true,
-//       },
-//       { value: 'Photography', label: 'Photography', isEnabled: true },
-//       { value: 'Sport', label: 'Sport', isEnabled: true },
-//       { value: 'Theatre/plays', label: 'Theatre/plays', isEnabled: true },
-//       { value: 'TV', label: 'TV', isEnabled: true },
-//       { value: 'Other', label: 'Other', isEnabled: true },
-//     ],
-//   },
-//   {
-//     value: 'Debt',
-//     label: 'Debt',
-//     isEnabled: true,
-//     subCategory: [
-//       { value: 'Credit cards', label: 'Credit cards', isEnabled: true },
-//       { value: 'Student loans', label: 'Student loans', isEnabled: true },
-//       { value: 'Other loans', label: 'Other loans', isEnabled: true },
-//       { value: 'Taxes', label: 'Taxes', isEnabled: true },
-//       { value: 'Other', label: 'Other', isEnabled: true },
-//     ],
-//   },
-//   {
-//     value: 'Health',
-//     label: 'Health',
-//     isEnabled: true,
-//     subCategory: [
-//       {
-//         value: 'Doctors/dental/vision',
-//         label: 'Doctors/dental/vision',
-//         isEnabled: true,
-//       },
-//       { value: 'Specialist care', label: 'Specialist care', isEnabled: true },
-//       { value: 'Pharmacy', label: 'Pharmacy', isEnabled: true },
-//       { value: 'Emergency', label: 'Emergency', isEnabled: true },
-//       { value: 'Other', label: 'Other', isEnabled: true },
-//     ],
-//   },
-//   {
-//     value: 'Insurance',
-//     label: 'Insurance',
-//     isEnabled: true,
-//     subCategory: [
-//       { value: 'Car', label: 'Car', isEnabled: true },
-//       { value: 'Health', label: 'Health', isEnabled: true },
-//       { value: 'Home', label: 'Home', isEnabled: true },
-//       { value: 'Life', label: 'Life', isEnabled: true },
-//       { value: 'Other', label: 'Other', isEnabled: true },
-//     ],
-//   },
-//   {
-//     value: 'Gifts',
-//     label: 'Gifts',
-//     isEnabled: true,
-//     subCategory: [
-//       { value: 'Gifts', label: 'Gifts', isEnabled: true },
-//       {
-//         value: 'Donations (charity)',
-//         label: 'Donations (charity)',
-//         isEnabled: true,
-//       },
-//       { value: 'Other', label: 'Other', isEnabled: true },
-//     ],
-//   },
-//   {
-//     value: 'Education',
-//     label: 'Education',
-//     isEnabled: true,
-//     subCategory: [
-//       { value: 'Tuition', label: 'Tuition', isEnabled: true },
-//       { value: 'Books', label: 'Books', isEnabled: true },
-//       { value: 'Music lessons', label: 'Music lessons', isEnabled: true },
-//       { value: 'Other', label: 'Other', isEnabled: true },
-//     ],
-//   },
-//   {
-//     value: 'Others',
-//     label: 'Others',
-//     isEnabled: true,
-//     subCategory: [
-//       { value: 'Other', label: 'Other', isEnabled: true },
-//       // Add as many empty subcategories as needed
-//     ],
-//   },
-//   {
-//     value: 'Investment',
-//     label: 'Investment',
-//     isEnabled: true,
-//     subCategory: [
-//       { value: 'MF', label: 'MF', isEnabled: true },
-//       { value: 'FD', label: 'FD', isEnabled: true },
-//       { value: 'Stock', label: 'Stock', isEnabled: true },
-//       { value: 'Gold', label: 'Gold', isEnabled: true },
-//       { value: 'Real Estate', label: 'Real Estate', isEnabled: true },
-//     ],
-//   },
-// ];
+export const InitialUserIncomeCategories = {
+  0: {
+    value: 'Wages',
+    label: 'Wages',
+    isEnabled: true,
+    subCategory: [1, 2],
+    isCategory: true,
+  },
+  1: {
+    value: 'Salary',
+    label: 'Salary',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+  2: {
+    value: 'Bonus',
+    label: 'Bonus',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+  3: {
+    value: 'Other',
+    label: 'Other',
+    isEnabled: true,
+    subCategory: [4, 5, 6, 7, 8, 9, 10],
+    isCategory: true,
+  },
+  4: {
+    value: 'Transfer from savings',
+    label: 'Transfer from savings',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+  5: {
+    value: 'Transfer from MF',
+    label: 'Transfer from MF',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+  6: {
+    value: 'Interest income',
+    label: 'Interest income',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+  7: {
+    value: 'Dividends',
+    label: 'Dividends',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+  8: {
+    value: 'Gifts',
+    label: 'Gifts',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+  9: {
+    value: 'Refunds',
+    label: 'Refunds',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+  10: {
+    value: 'Other',
+    label: 'Other',
+    isEnabled: true,
+    subCategory: [],
+    isCategory: false,
+  },
+};
 
 export const InitialUserCategories = {
   // Transportation
@@ -582,15 +476,3 @@ export const InitialUserCategories = {
 
   86: { value: 'Other', label: 'Other', isEnabled: true, subCategory: [] },
 };
-
-function getAllCategories(data) {
-  let list = [];
-  for (const [key, value] of Object.entries(data)) {
-    if (value.isCategory) {
-      list.push(key);
-    }
-  }
-  return list;
-}
-
-// console.log(getAllCategories(InitialUserCategories));

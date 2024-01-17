@@ -16,6 +16,8 @@ import PropTypes from 'prop-types';
 import TabPanelUserDetails from '../components/TabPanelUserDetails';
 import { useSelector } from 'react-redux';
 import DisplayCategories from '../components/DisplayCategories';
+import DisplayAccounts from '../components/DisplayAccounts';
+import DisplayIncomeCategories from '../components/DisplayIncomeCategories';
 
 function TabPanel({ children, value, index, ...other }) {
   return (
@@ -51,7 +53,6 @@ function a11yProps(index) {
 const defaultTheme = createTheme();
 const Profile = () => {
   const { user } = useSelector((state) => state.user);
-  const [isEdit, setIsEdit] = useState(false);
 
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
@@ -93,7 +94,7 @@ const Profile = () => {
                   onChange={handleChange}
                 >
                   <Tab
-                    label="User Data"
+                    label="User Info"
                     {...a11yProps(0)}
                     sx={{
                       display: 'flex',
@@ -102,7 +103,7 @@ const Profile = () => {
                     }}
                   />
                   <Tab
-                    label="Categories"
+                    label="Accounts"
                     {...a11yProps(1)}
                     sx={{
                       display: 'flex',
@@ -111,8 +112,17 @@ const Profile = () => {
                     }}
                   />
                   <Tab
-                    label="Change Password"
+                    label="Income Categories"
                     {...a11yProps(2)}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      mt: 2,
+                    }}
+                  />
+                  <Tab
+                    label="Expense Categories"
+                    {...a11yProps(3)}
                     sx={{
                       display: 'flex',
                       alignItems: 'flex-start',
@@ -124,13 +134,19 @@ const Profile = () => {
                   <TabPanelUserDetails />
                 </TabPanel>
                 <TabPanel value={value} index={1}>
+                  <DisplayAccounts />
+                </TabPanel>
+                <TabPanel value={value} index={2}>
+                  <DisplayIncomeCategories
+                    categoriesData={user.incomeCategories}
+                    accountsData={user.accounts}
+                  />
+                </TabPanel>
+                <TabPanel value={value} index={3}>
                   <DisplayCategories
                     categoriesData={user.categories}
                     accountsData={user.accounts}
                   />
-                </TabPanel>
-                <TabPanel value={value} index={2}>
-                  Item Three
                 </TabPanel>
               </Box>
             </Paper>

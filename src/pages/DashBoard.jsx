@@ -1,24 +1,10 @@
 import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Box, Container, Grid, Paper } from '@mui/material';
-
-// import {
-//   IncomeExpenseChart,
-//   NewTransaction,
-//   TransactionHistory,
-//   Copyright,
-// } from '../components';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import {
-  collection,
-  doc,
-  getDocs,
-  query,
-  setDoc,
-  where,
-} from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import {
   IncomeExpenseChart,
@@ -29,36 +15,6 @@ import {
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
-
-export const action = async ({ request }) => {
-  const formData = await request.formData();
-  const data = Object.fromEntries(formData);
-
-  console.log(data);
-  return null;
-  // try {
-  //   const transactionId = uuidv4();
-  //   await setDoc(doc(db, 'transactions', transactionId), {
-  //     account: data.account,
-  //     amount: Number(data.amount),
-  //     category: data.category,
-  //     date: data.date,
-  //     note: encrypt(data.note),
-  //     subCategory: data.subCategory,
-  //     type: data.type,
-  //     userId: store.getState()?.user?.user?.userId,
-  //     createdAt: Date.now(),
-  //     transactionId,
-  //   });
-
-  //   alert('Success!');
-
-  //   return null;
-  // } catch (error) {
-  //   alert('Error!', error.message);
-  //   return null;
-  // }
-};
 
 const DashBoard = () => {
   const userId = useSelector((state) => state.user.user.userId);
@@ -96,7 +52,10 @@ const DashBoard = () => {
         chartList[index] = obj;
       }
     });
-    setTransactionList(list);
+
+    setTransactionList(
+      list.sort((a, b) => b.createdAt - a.createdAt).slice(0, 5)
+    );
     setChartData(chartList);
   };
 
@@ -157,7 +116,7 @@ const DashBoard = () => {
                   </Paper>
                 </Grid>
               </Grid>
-              {/* Recent Deposits */}
+              {/* New Transactions */}
               <Grid item xs={12} md={4}>
                 <Paper
                   sx={{

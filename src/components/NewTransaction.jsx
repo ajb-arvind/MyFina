@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
-import { categories, formatDateDDYMMYYY } from '../misc/Utils';
+import { formatDateDDYMMYYY } from '../misc/Utils';
 import { v4 as uuidv4 } from 'uuid';
 import { store } from '../redux/store';
 import { doc, setDoc } from 'firebase/firestore';
@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function NewTransaction() {
   const [type, setType] = useState('income');
-
+  const navigate = useNavigate();
   const userData = useSelector((state) => state.user.user);
 
   const accountOptions = Object.values(userData.accounts);
@@ -34,7 +34,12 @@ export default function NewTransaction() {
     return list;
   }
 
-  const CategoriesOption = getAllCategories(userData.categories);
+  let CategoriesOption, subCategoryOption, SubCategoryIds;
+
+  CategoriesOption =
+    type === 'income'
+      ? getAllCategories(userData.incomeCategories)
+      : getAllCategories(userData.categories);
 
   const [date, setDate] = useState(formatDateDDYMMYYY(new Date()));
   const [selectedCategory, setSelectedCategory] = useState({
@@ -43,19 +48,35 @@ export default function NewTransaction() {
     value: '',
     isEnable: false,
   });
+
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
   const [selectedAccount, setSelectedAccount] = useState(null);
 
-  const SubCategoryIds = selectedCategory?.subCategory;
+  SubCategoryIds = selectedCategory?.subCategory;
 
   function getAllSubCategories(SubCategoryIds) {
-    return SubCategoryIds?.map((item) => userData.categories[item]) || [];
+    return type === 'income'
+      ? SubCategoryIds?.map((item) => userData.incomeCategories[item]) || []
+      : SubCategoryIds?.map((item) => userData.categories[item]) || [];
   }
 
-  const subCategoryOption = getAllSubCategories(SubCategoryIds);
+  subCategoryOption = getAllSubCategories(SubCategoryIds);
 
   const handleType = (event, newType) => {
-    setType(newType);
+    CategoriesOption =
+      event.target.value === 'income'
+        ? getAllCategories(userData.incomeCategories)
+        : getAllCategories(userData.categories);
+    setSelectedCategory({
+      label: '',
+      subCategory: [],
+      value: '',
+      isEnable: false,
+    });
+    setSelectedSubCategory(null);
+    const SubCategoryIds = selectedCategory?.subCategory;
+    subCategoryOption = getAllSubCategories(SubCategoryIds);
+    setType(event.target.value);
   };
 
   const handleSubmit = async (event) => {
@@ -68,6 +89,7 @@ export default function NewTransaction() {
         account: data.get('account'),
         amount: Number(data.get('amount')),
         category: data.get('category'),
+        incomeCategories: data.get('incomeCategories'),
         date: data.get('date'),
         note: encrypt(data.get('note')),
         subCategory: data.get('subCategory'),
@@ -77,14 +99,16 @@ export default function NewTransaction() {
         transactionId,
       });
 
-      alert('Success!');
+      alert('Transaction added successfully!');
     } catch (error) {
-      alert('Error!', error.message);
+      alert('Failed to add Transaction!', error.message);
     }
+    event.target.reset();
+    navigate(0);
   };
 
   return (
-    <React.Fragment>
+    <>
       <Box
         sx={{
           display: 'flex',
@@ -92,7 +116,7 @@ export default function NewTransaction() {
           alignItems: 'center',
         }}
       >
-        <Box component="form" onSubmit={handleSubmit} noValidate>
+        <Box component="form" onSubmit={handleSubmit}>
           <ToggleButtonGroup
             fullWidth
             value={type}
@@ -133,7 +157,7 @@ export default function NewTransaction() {
               setSelectedAccount(newValue);
             }}
             renderInput={(params) => (
-              <TextField {...params} label="Account" name="account" />
+              <TextField {...params} label="Account" name="account" required />
             )}
           />
           <Autocomplete
@@ -142,12 +166,23 @@ export default function NewTransaction() {
             sx={{ py: 1 }}
             id="category"
             options={CategoriesOption}
-            value={selectedCategory}
+            value={selectedCategory || null}
             onChange={(event, newValue) => {
               setSelectedCategory(newValue);
             }}
+            onInputChange={(event, newInputValue, reason) => {
+              if (reason === 'clear') {
+                setSelectedSubCategory(null);
+              } else {
+              }
+            }}
             renderInput={(params) => (
-              <TextField {...params} label="Category" name="category" />
+              <TextField
+                {...params}
+                label="Category"
+                name="category"
+                required
+              />
             )}
             isOptionEqualToValue={(option, value) => option.id === value.id}
           />
@@ -157,12 +192,17 @@ export default function NewTransaction() {
             sx={{ py: 1 }}
             id="subCategory"
             options={subCategoryOption}
-            value={selectedSubCategory}
+            value={selectedSubCategory || null}
             onChange={(event, newValue) => {
               setSelectedSubCategory(newValue);
             }}
             renderInput={(params) => (
-              <TextField {...params} label="Sub Category" name="subCategory" />
+              <TextField
+                {...params}
+                label="Sub Category"
+                name="subCategory"
+                required
+              />
             )}
             isOptionEqualToValue={(option, value) => option.id === value.id}
           />
@@ -193,6 +233,6 @@ export default function NewTransaction() {
           </Button>
         </Box>
       </Box>
-    </React.Fragment>
+    </>
   );
 }

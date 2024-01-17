@@ -9,12 +9,14 @@ import {
   Box,
   Typography,
   Container,
+  Alert,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  signOut,
   updateProfile,
 } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
@@ -22,14 +24,23 @@ import { auth, db } from '../firebase';
 import { loginUser } from '../redux/features/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { InitialUserAccounts, InitialUserCategories } from '../misc/Utils';
+import {
+  InitialUserAccounts,
+  InitialUserCategories,
+  InitialUserIncomeCategories,
+} from '../misc/Utils';
 import { Copyright } from '../components';
+import { useState } from 'react';
 
 const defaultTheme = createTheme();
 
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [resetMessage, setResetMessage] = useState({
+    message: '',
+    isSuccess: true,
+  });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -50,6 +61,7 @@ const Register = () => {
         name,
         email: emailId,
         userId: userCredential.user.uid,
+        incomeCategories: InitialUserIncomeCategories,
         categories: InitialUserCategories,
         accounts: InitialUserAccounts,
         profileUrl: '',
@@ -65,18 +77,26 @@ const Register = () => {
       const { email, displayName, emailVerified, uid } = userCredential.user;
       dispatch(
         loginUser({
-          user: { email, displayName, emailVerified, uid },
+          user: {
+            email,
+            displayName,
+            emailVerified,
+            uid,
+            InitialUserIncomeCategories,
+            InitialUserCategories,
+            InitialUserAccounts,
+          },
           isLogin: true,
         })
       );
-      navigate('/home');
+      await signOut(auth);
+      navigate('/login');
     } catch (error) {
-      console.log(error.message);
+      setResetMessage({
+        message: 'Register Error ' + error.message,
+        isSuccess: false,
+      });
     }
-  };
-
-  const sendMailForVerification = async () => {
-    await sendEmailVerification(auth.currentUser);
   };
 
   return (
@@ -147,6 +167,14 @@ const Register = () => {
                 />
               </Grid>
             </Grid>
+            {resetMessage.message ? (
+              <Alert
+                severity={resetMessage.isSuccess ? 'success' : 'error'}
+                sx={{ mt: 2 }}
+              >
+                {resetMessage.message}
+              </Alert>
+            ) : null}
             <Button
               type="submit"
               fullWidth
