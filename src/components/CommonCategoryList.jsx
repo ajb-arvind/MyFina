@@ -17,6 +17,8 @@ import CommonCategory from './CommonCategory';
 const CATEGORIES = 'Categories';
 const SUB_CATEGORIES = 'Sub Categories';
 const ACCOUNTS = 'Accounts';
+const INCOME_CATEGORIES = 'Income Categories';
+const INCOME_SUB_CATEGORIES = 'Income Sub Categories';
 
 const CommonCategoryList = ({
   title,
@@ -29,44 +31,110 @@ const CommonCategoryList = ({
   const [inputValue, setInputValue] = useState('');
   const dispatch = useDispatch();
 
-  const handlePushToData = () => {
-    if (title != ACCOUNTS && inputValue !== '') {
-      title === CATEGORIES &&
-        dispatch(pushToCategories({ inputValue, isCategory: true }));
-      title === SUB_CATEGORIES &&
-        dispatch(
-          pushToCategories({
-            inputValue,
-            isCategory: false,
-            selectedCategoryId,
-          })
-        );
-    }
-    if (title === ACCOUNTS) {
-      dispatch(pushToAccounts(inputValue));
-    }
-
-    //TODO: pushTOIncomeCategories
-    setInputValue('');
-  };
-
   const toggleCheckbox = (id) => {
-    title === ACCOUNTS && dispatch(updateCheckbox({ type: 'accounts', id }));
-    title != ACCOUNTS && dispatch(updateCheckbox({ type: 'categories', id }));
-    //TODO: updateCheckbox type:incomeCategories
+    switch (title) {
+      case ACCOUNTS:
+        dispatch(updateCheckbox({ type: 'accounts', id }));
+        break;
+
+      case CATEGORIES:
+      case SUB_CATEGORIES:
+        dispatch(updateCheckbox({ type: 'categories', id }));
+        break;
+
+      case INCOME_CATEGORIES:
+      case INCOME_SUB_CATEGORIES:
+        dispatch(updateCheckbox({ type: 'incomeCategories', id }));
+        break;
+    }
   };
 
   const handleDeleteFromData = (id) => {
     if (confirm(`Are sure to delete the ${data[id].value}`)) {
-      title === ACCOUNTS && dispatch(updateAccounts(id));
-      title === SUB_CATEGORIES &&
-        dispatch(
-          updateSubCategories({ parentId: selectedCategoryId, childId: id })
-        );
+      switch (title) {
+        case ACCOUNTS:
+          dispatch(updateAccounts(id));
+          break;
+        case CATEGORIES:
+          dispatch(updateCategories({ type: 'categories', id }));
+          break;
+        case SUB_CATEGORIES:
+          dispatch(
+            updateSubCategories({
+              type: 'categories',
+              parentId: selectedCategoryId,
+              childId: id,
+            })
+          );
 
-      title === CATEGORIES && dispatch(updateCategories(id));
-      //TODO: updateIncomeCategories 
+          break;
+        case INCOME_CATEGORIES:
+          dispatch(updateCategories({ type: 'incomeCategories', id }));
+          break;
+        case INCOME_SUB_CATEGORIES:
+          dispatch(
+            updateSubCategories({
+              type: 'incomeCategories',
+              parentId: selectedCategoryId,
+              childId: id,
+            })
+          );
+          break;
+      }
+
+      //TODO: updateIncomeCategories
     }
+  };
+
+  const handlePushToData = () => {
+    if (inputValue !== '') {
+      switch (title) {
+        case ACCOUNTS:
+          dispatch(pushToAccounts(inputValue));
+          break;
+        case CATEGORIES:
+          dispatch(
+            pushToCategories({
+              type: 'categories',
+              inputValue,
+              isCategory: true,
+            })
+          );
+          break;
+        case SUB_CATEGORIES:
+          dispatch(
+            pushToCategories({
+              type: 'categories',
+              inputValue,
+              isCategory: false,
+              selectedCategoryId,
+            })
+          );
+          break;
+        case INCOME_CATEGORIES:
+          dispatch(
+            pushToCategories({
+              type: 'incomeCategories',
+              inputValue,
+              isCategory: true,
+            })
+          );
+          break;
+        case INCOME_SUB_CATEGORIES:
+          dispatch(
+            pushToCategories({
+              type: 'incomeCategories',
+              inputValue,
+              isCategory: false,
+              selectedCategoryId,
+            })
+          );
+          break;
+      }
+    }
+
+    //TODO: pushTOIncomeCategories
+    setInputValue('');
   };
 
   return (
@@ -81,9 +149,10 @@ const CommonCategoryList = ({
                 id={id}
                 data={data}
                 selectedCategoryId={selectedCategoryId}
-                onClickCategory={() =>
-                  title === CATEGORIES && onClickCategory(id)
-                }
+                onClickCategory={() => {
+                  title === CATEGORIES && onClickCategory(id);
+                  title == INCOME_CATEGORIES && onClickCategory(id);
+                }}
                 onClickCheckbox={() => toggleCheckbox(id)}
                 handleDeleteCategory={() => handleDeleteFromData(id)}
                 isEdit={isEdit}

@@ -21,12 +21,10 @@ const CategoryWisePieChart = ({ transactionList }) => {
     return accumulator;
   }, []);
 
-  // console.log(data);
   let Total = 0;
   data.forEach((item) => {
     Total += item.value;
   });
-
 
   return (
     <>

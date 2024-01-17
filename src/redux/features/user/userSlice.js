@@ -22,52 +22,21 @@ export const userSlice = createSlice({
       state.isLogin = false;
       state.emailVerified = false;
     },
-    // updateCategories: (state, action) => {
-    //   state.user.categories = action.payload;
-    // },
-    updateAccounts: (state, action) => {
-      state.user.accounts = action.payload;
-    },
+
     updateEmailVerified: (state, action) => {
       state.emailVerified = action.payload;
     },
     updateActivationCompleted: (state, action) => {
       state.user.activationCompleted = action.payload;
     },
+
+    storeUpdatedUsersList: (state, action) => {
+      state.user = action.payload;
+    },
+
+    //Accounts-categories-income_categories
     updateAccounts: (state, action) => {
       delete state.user.accounts[action.payload];
-    },
-    updateSubCategories: (state, action) => {
-      const { parentId, childId } = action.payload;
-      state.user.categories[parentId].subCategory = state.user.categories[
-        parentId
-      ].subCategory.filter((item) => item != childId);
-
-      delete state.user.categories[childId];
-    },
-    updateCategories: (state, action) => {
-      state.user.categories[action.payload].subCategory.forEach((element) => {
-        delete state.user.categories[element];
-      });
-      delete state.user.categories[action.payload];
-    },
-    updateCheckbox: (state, action) => {
-      const { type, id } = action.payload;
-      state.user[type][id].isEnabled = !state.user[type][id].isEnabled;
-    },
-    pushToCategories: (state, action) => {
-      const { inputValue, isCategory, selectedCategoryId } = action.payload;
-      const newId = uuidv4();
-      state.user.categories[newId] = {
-        isEnabled: true,
-        label: inputValue,
-        value: inputValue,
-        subCategory: [],
-        isCategory: isCategory,
-      };
-      if (!isCategory) {
-        state.user.categories[selectedCategoryId].subCategory.push(newId);
-      }
     },
     pushToAccounts: (state, action) => {
       const newId = uuidv4();
@@ -77,6 +46,44 @@ export const userSlice = createSlice({
         value: action.payload,
       };
     },
+    updateCheckbox: (state, action) => {
+      const { type, id } = action.payload;
+
+      state.user[type][id].isEnabled = !state.user[type][id].isEnabled;
+    },
+    updateCategories: (state, action) => {
+      const { type, id } = action.payload;
+
+      state.user[type][action.payload]?.subCategory?.forEach((element) => {
+        delete state.user[type][element];
+      });
+      delete state.user[type][id];
+    },
+    updateSubCategories: (state, action) => {
+      const { type, parentId, childId } = action.payload;
+
+      state.user[type][parentId].subCategory = state.user[type][
+        parentId
+      ].subCategory.filter((item) => item != childId);
+      delete state.user[type][childId];
+    },
+
+    pushToCategories: (state, action) => {
+      const { type, inputValue, isCategory, selectedCategoryId } =
+        action.payload;
+      const newId = uuidv4();
+      state.user[type][newId] = {
+        isEnabled: true,
+        label: inputValue,
+        value: inputValue,
+        subCategory: [],
+        isCategory: isCategory,
+      };
+      if (!isCategory) {
+        state.user[type][selectedCategoryId].subCategory.push(newId);
+      }
+    },
+
     //TODO: pushToIncomeCategories
     //TODO: updateIncomeCategories
   },
@@ -85,6 +92,7 @@ export const userSlice = createSlice({
 export const {
   loginUser,
   logoutUser,
+  storeUpdatedUsersList,
   updateCategories,
   updateAccounts,
   updateEmailVerified,

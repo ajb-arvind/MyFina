@@ -11,7 +11,7 @@ const defaultTheme = createTheme();
 
 const columns = [
   { field: 'date', headerName: 'Date', flex: 1, minWidth: 100 },
-  { field: 'type', headerName: 'Type', flex: 1, minWidth: 100 },
+  { field: 'type', headerName: 'Type', flex: 1, minWidth: 100, editable: true },
   { field: 'category', headerName: 'Category', flex: 1, minWidth: 150 },
   {
     field: 'subCategory',

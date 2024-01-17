@@ -4,8 +4,6 @@ import {
   Button,
   CssBaseline,
   TextField,
-  FormControlLabel,
-  Checkbox,
   Link,
   Grid,
   Box,
@@ -17,17 +15,22 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { doc, getDoc } from 'firebase/firestore';
-import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import {
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../redux/features/user/userSlice';
-import { useNavigate } from 'react-router-dom';
+import { loginUser, logoutUser } from '../redux/features/user/userSlice';
+import { redirect, useNavigate } from 'react-router-dom';
 import { Copyright, PasswordResetDialog } from '../components';
 import { useState } from 'react';
 
 const Login = () => {
   const dispatch = useDispatch();
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -44,37 +47,49 @@ const Login = () => {
 
       //if sign in successful save following details in store-userSlice
       const { emailVerified, uid } = userCredential.user;
-
-      const docRef = doc(db, 'users', uid);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        let user = docSnap.data();
-        dispatch(
-          loginUser({
-            user,
-            isLogin: true,
-            emailVerified: true,
-          })
-        );
-      }
-
-      // redirect if email is not verified
       if (!emailVerified) {
-        await signOut(auth);
-        navigate('/login');
         setResetMessage({
           message: 'Verify Email before login',
           isSuccess: false,
         });
+
+        setTimeout(() => {
+          setResetMessage({
+            message: '',
+            isSuccess: false,
+          });
+        }, 10000);
+        dispatch(logoutUser());
+        await signOut(auth);
       } else {
+        const docRef = doc(db, 'users', uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          let user = docSnap.data();
+          dispatch(
+            loginUser({
+              user,
+              isLogin: true,
+              emailVerified: true,
+            })
+          );
+        }
         navigate('/home');
       }
 
       // redirect to home page
     } catch (error) {
-      console.log(error);
-      return;
+      setResetMessage({
+        message: 'Login Error ' + error.message,
+        isSuccess: false,
+      });
+      setTimeout(() => {
+        setResetMessage({
+          message: '',
+          isSuccess: false,
+        });
+      }, 5000);
     }
   };
 
@@ -126,6 +141,8 @@ const Login = () => {
               label="Email Address"
               name="email"
               autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               autoFocus
             />
             <TextField
@@ -138,10 +155,7 @@ const Login = () => {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+
             {resetMessage.message ? (
               <Alert
                 severity={resetMessage.isSuccess ? 'success' : 'error'}
@@ -159,6 +173,7 @@ const Login = () => {
             >
               Sign In
             </Button>
+
             <Grid container>
               <Grid item xs>
                 <Link

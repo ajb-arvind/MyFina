@@ -1,18 +1,20 @@
 import { Box, Grid, Button, Typography } from '@mui/material';
 
-import { useState } from 'react';
-import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase';
-import { store } from '../redux/store';
-
-import { useSelector } from 'react-redux';
 import CommonCategoryList from './CommonCategoryList';
+import { useState } from 'react';
+
+import { useDispatch, useSelector } from 'react-redux';
+
+import { db } from '../firebase';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { storeUpdatedUsersList } from '../redux/features/user/userSlice';
 
 const ACCOUNTS = 'Accounts';
 
 const DisplayAccounts = () => {
   const { user } = useSelector((state) => state.user);
   const [isEdit, setIsEdit] = useState(false);
+   const dispatch = useDispatch();
 
   //accountList
   const accountList = Object.keys(user.accounts);
@@ -30,6 +32,13 @@ const DisplayAccounts = () => {
         console.log(error);
       }
     } else {
+      const docRef = doc(db, 'users', user.userId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        let user = docSnap.data();
+        dispatch(storeUpdatedUsersList(user));
+      }
     }
   };
 

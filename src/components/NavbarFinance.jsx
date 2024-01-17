@@ -38,7 +38,8 @@ const settings = [
   },
 ];
 const NavbarFinance = () => {
-  const { name } = useSelector((state) => state.user?.user);
+  const user = useSelector((state) => state.user?.user);
+  const isLogin = useSelector((state) => state.user.isLogin);
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -88,46 +89,50 @@ const NavbarFinance = () => {
           </Paper>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem
-                  key={page.label}
-                  onClick={() => {
-                    handleCloseNavMenu();
-                    navigate(page.url);
+            {isLogin && (
+              <>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleOpenNavMenu}
+                  color="inherit"
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorElNav}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                  }}
+                  open={Boolean(anchorElNav)}
+                  onClose={handleCloseNavMenu}
+                  sx={{
+                    display: { xs: 'block', md: 'none' },
                   }}
                 >
-                  <Typography textAlign="center">{page.label}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+                  {pages.map((page) => (
+                    <MenuItem
+                      key={page.label}
+                      onClick={() => {
+                        handleCloseNavMenu();
+                        navigate(page.url);
+                      }}
+                    >
+                      <Typography textAlign="center">{page.label}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
+            )}
           </Box>
 
           <Box
@@ -152,56 +157,71 @@ const NavbarFinance = () => {
           </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page.label}
-                onClick={() => navigate(page.url)}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page.label}
-              </Button>
-            ))}
+            {isLogin &&
+              pages.map((page) => (
+                <Button
+                  key={page.label}
+                  onClick={() => navigate(page.url)}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  {page.label}
+                </Button>
+              ))}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={name} sx={{ bgcolor: deepOrange[500] }}>
-                  {name.match(/\b(\w)/g).join('')}
-                </Avatar>
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting, index) => {
-                const isLastItem = index === settings.length - 1;
-                return (
-                  <MenuItem
-                    key={setting.label}
-                    onClick={() => {
-                      isLastItem ? handleLogout() : handleCloseUserMenu();
-                      navigate(setting.url);
-                    }}
-                  >
-                    <Typography textAlign="center">{setting.label}</Typography>
-                  </MenuItem>
-                );
-              })}
-            </Menu>
+            {isLogin ? (
+              <>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt={user.name} sx={{ bgcolor: deepOrange[500] }}>
+                      {user.name.match(/\b(\w)/g).join('')}
+                    </Avatar>
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting, index) => {
+                    const isLastItem = index === settings.length - 1;
+                    return (
+                      <MenuItem
+                        key={setting.label}
+                        onClick={() => {
+                          isLastItem ? handleLogout() : handleCloseUserMenu();
+                          navigate(setting.url);
+                        }}
+                      >
+                        <Typography textAlign="center">
+                          {setting.label}
+                        </Typography>
+                      </MenuItem>
+                    );
+                  })}
+                </Menu>
+              </>
+            ) : (
+              <Button
+                sx={{ my: 2, color: 'white', display: 'block' }}
+                onClick={() => navigate('/login')}
+              >
+                Login
+              </Button>
+            )}
+            {/* TODO: add login and register  */}
           </Box>
         </Toolbar>
       </Container>

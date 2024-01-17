@@ -57,7 +57,7 @@ const Stats = () => {
 
   useEffect(() => {
     getTransactionList();
-  }, [transactionList]);
+  }, []);
 
   const incomeTransactionList = transactionList.filter(
     (transaction) => transaction.type === 'income'

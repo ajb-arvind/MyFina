@@ -9,6 +9,7 @@ import {
   Box,
   Typography,
   Container,
+  Alert,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -29,12 +30,17 @@ import {
   InitialUserIncomeCategories,
 } from '../misc/Utils';
 import { Copyright } from '../components';
+import { useState } from 'react';
 
 const defaultTheme = createTheme();
 
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [resetMessage, setResetMessage] = useState({
+    message: '',
+    isSuccess: true,
+  });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -86,7 +92,10 @@ const Register = () => {
       await signOut(auth);
       navigate('/login');
     } catch (error) {
-      console.log(error.message);
+      setResetMessage({
+        message: 'Register Error ' + error.message,
+        isSuccess: false,
+      });
     }
   };
 
@@ -158,6 +167,14 @@ const Register = () => {
                 />
               </Grid>
             </Grid>
+            {resetMessage.message ? (
+              <Alert
+                severity={resetMessage.isSuccess ? 'success' : 'error'}
+                sx={{ mt: 2 }}
+              >
+                {resetMessage.message}
+              </Alert>
+            ) : null}
             <Button
               type="submit"
               fullWidth
