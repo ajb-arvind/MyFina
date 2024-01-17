@@ -8,13 +8,13 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: 'AIzaSyAPI0GWbzJWQC--vFHlZqdOfoopAzoYh3E',
-  authDomain: 'personalfinance-c69bb.firebaseapp.com',
-  projectId: 'personalfinance-c69bb',
-  storageBucket: 'personalfinance-c69bb.appspot.com',
-  messagingSenderId: '534594772081',
-  appId: '1:534594772081:web:0f96738a835ecc30004fd0',
-  measurementId: 'G-MYY9RVB4NE',
+  apiKey: 'AIzaSyAwqrvyw9OwqUMm10bivZJsM58IdTUCAR0',
+  authDomain: 'my-finance-0.firebaseapp.com',
+  projectId: 'my-finance-0',
+  storageBucket: 'my-finance-0.appspot.com',
+  messagingSenderId: '898681003689',
+  appId: '1:898681003689:web:9ed7adbf8a51f1174c13b8',
+  measurementId: 'G-ND53PV63BX',
 };
 
 // Initialize Firebase
